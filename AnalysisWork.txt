@@ -1,0 +1,12 @@
+FOR(#x$$[1], $$[3], $$[4]);
+FOR(#z$$[1], $$[6], $$[7]);
+	GETID(%#x$$[1]%,$$[5],%#z$$[1]%,&block$$[1]$$[5]);
+	IFMATCHES("$$[2]","%&block$$[1]$$[5]%,");
+		GETITEMINFO(%&block$$[1]$$[5]%,&blockname$$[1]$$[5]);
+		LOG("§fНайдено §6%&blockname$$[1]$$[5]% §fна §6%#x$$[1]% $$[5] %#z$$[1]%");
+		PLAYSOUND(entity.experience_orb.touch);
+	ENDIF();
+NEXT(); NEXT();
+UNSET(#x$$[1]); UNSET(#z$$[1]);
+UNSET(&block$$[1]$$[5]);
+UNSET(&blockname$$[1]$$[5]);
