@@ -1,0 +1,6 @@
+# Player template
+# player_nickname: '0x(clan_ID)(guild_ID)(guild_level)'
+# Example:
+# ocelotjungle: '0x01021E' - first clan, second guild, 30th level
+
+players: {}
