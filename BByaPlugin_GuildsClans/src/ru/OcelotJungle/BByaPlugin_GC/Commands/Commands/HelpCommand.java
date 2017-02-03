@@ -1,4 +1,4 @@
-package ru.OcelotJungle.BByaPlugin_GC.Commands.Commands;
+package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
 import java.util.List;
 import java.util.Map;
@@ -7,10 +7,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import ru.OcelotJungle.BByaPlugin_GC.Logging;
-import ru.OcelotJungle.BByaPlugin_GC.Main;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Manage.CommandInterface;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Manage.CommandManager;
+import ru.ocelotjungle.bbyaplugin_gc.Logging;
+import ru.ocelotjungle.bbyaplugin_gc.Main;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandManager;
 
 @SuppressWarnings("unused")
 public class HelpCommand implements CommandInterface {

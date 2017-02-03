@@ -1,8 +1,8 @@
-package ru.OcelotJungle.BByaPlugin_GC;
+package ru.ocelotjungle.bbyaplugin_gc;
 
 /*******************************************
  *                                         *
- *   Сохранение и перезагрузка конфигов    *
+ *      Saving and reloading configs       *
  *                                         *
  *******************************************/
 
@@ -63,3 +63,4 @@ public class Configs {
 	}
 
 }
+

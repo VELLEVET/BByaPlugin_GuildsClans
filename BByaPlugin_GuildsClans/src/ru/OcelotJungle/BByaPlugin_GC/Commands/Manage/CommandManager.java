@@ -1,8 +1,8 @@
-package ru.OcelotJungle.BByaPlugin_GC.Commands.Manage;
+package ru.ocelotjungle.bbyaplugin_gc.commands.manage;
 
 /*******************************************
  *                                         *
- *    Перевод обработки на соотв. класс    *
+ *       Processing of typed command       *
  *                                         *
  *******************************************/
 
@@ -15,16 +15,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_11_R1.command.CraftBlockCommandSender;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 
-import ru.OcelotJungle.BByaPlugin_GC.Main;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Commands.GetClanCommand;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Commands.GetGuildCommand;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Commands.GetLevelCommand;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Commands.HelpCommand;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Commands.ReloadCommand;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Commands.ResetInfoCommand;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Commands.SetClanCommand;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Commands.SetGuildCommand;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Commands.SetLevelCommand;
+import ru.ocelotjungle.bbyaplugin_gc.Main;
+import ru.ocelotjungle.bbyaplugin_gc.commands.commands.GetClanCommand;
+import ru.ocelotjungle.bbyaplugin_gc.commands.commands.GetGuildCommand;
+import ru.ocelotjungle.bbyaplugin_gc.commands.commands.GetLevelCommand;
+import ru.ocelotjungle.bbyaplugin_gc.commands.commands.HelpCommand;
+import ru.ocelotjungle.bbyaplugin_gc.commands.commands.ReloadCommand;
+import ru.ocelotjungle.bbyaplugin_gc.commands.commands.ResetInfoCommand;
+import ru.ocelotjungle.bbyaplugin_gc.commands.commands.SetClanCommand;
+import ru.ocelotjungle.bbyaplugin_gc.commands.commands.SetGuildCommand;
+import ru.ocelotjungle.bbyaplugin_gc.commands.commands.SetLevelCommand;
 
 public class CommandManager implements CommandExecutor {
 	

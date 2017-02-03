@@ -1,8 +1,8 @@
-package ru.OcelotJungle.BByaPlugin_GC.Commands.Manage;
+package ru.ocelotjungle.bbyaplugin_gc.commands.manage;
 
 /*******************************************
  *                                         *
- *      Обработка нажатия кнопки ТАБ       *
+ *      Processing of TAB pressing         *
  *                                         *
  *******************************************/
 
@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import ru.OcelotJungle.BByaPlugin_GC.Main;
+import ru.ocelotjungle.bbyaplugin_gc.Main;
 
 public class TabComplete implements TabCompleter {
 	

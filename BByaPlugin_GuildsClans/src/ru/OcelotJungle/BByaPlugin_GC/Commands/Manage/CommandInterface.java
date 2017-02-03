@@ -1,8 +1,8 @@
-package ru.OcelotJungle.BByaPlugin_GC.Commands.Manage;
+package ru.ocelotjungle.bbyaplugin_gc.commands.manage;
 
 /*******************************************
  *                                         *
- *        Основной интерфейс команд        *
+ *        Main commands interface          *
  *                                         *
  *******************************************/
 

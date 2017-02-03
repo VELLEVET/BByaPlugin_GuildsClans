@@ -1,15 +1,15 @@
-package ru.OcelotJungle.BByaPlugin_GC.Commands.Commands;
+package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import ru.OcelotJungle.BByaPlugin_GC.Configs;
-import ru.OcelotJungle.BByaPlugin_GC.Main;
-import ru.OcelotJungle.BByaPlugin_GC.ScheduledEffects;
-import ru.OcelotJungle.BByaPlugin_GC.SomeStuff;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Manage.CommandInterface;
+import ru.ocelotjungle.bbyaplugin_gc.Configs;
+import ru.ocelotjungle.bbyaplugin_gc.Main;
+import ru.ocelotjungle.bbyaplugin_gc.ScheduledEffects;
+import ru.ocelotjungle.bbyaplugin_gc.Utils;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 
 public class ReloadCommand implements CommandInterface {
 	
@@ -41,13 +41,13 @@ public class ReloadCommand implements CommandInterface {
 	public void execute(CommandSender sender, String label, String[] args) {
 		
 		Configs.reloadCfgs();
-		SomeStuff.initCfgsToScoreboard();
-		SomeStuff.initEffects();
+		Utils.initCfgsToScoreboard();
+		Utils.initEffects();
 		
 		new ScheduledEffects(Main.plugin);
 		
 		for (Player player : Main.server.getOnlinePlayers()) {
-			SomeStuff.rebuildPlayerNickname(player);
+			Utils.rebuildPlayerNickname(player);
 		}
 		
 		sender.sendMessage("BByaPlugin_GuildsClans configs reloaded.");

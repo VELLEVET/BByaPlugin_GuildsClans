@@ -1,4 +1,4 @@
-package ru.OcelotJungle.BByaPlugin_GC.Commands.Commands;
+package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +9,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import ru.OcelotJungle.BByaPlugin_GC.Configs;
-import ru.OcelotJungle.BByaPlugin_GC.Main;
-import ru.OcelotJungle.BByaPlugin_GC.SomeStuff;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Manage.CommandInterface;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Manage.IncorrectValueException;
+import ru.ocelotjungle.bbyaplugin_gc.Configs;
+import ru.ocelotjungle.bbyaplugin_gc.Main;
+import ru.ocelotjungle.bbyaplugin_gc.Utils;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.IncorrectValueException;
 
 public class SetClanCommand implements CommandInterface {
 	
@@ -62,12 +62,12 @@ public class SetClanCommand implements CommandInterface {
 					
 					if (!playersCfg.contains("players." + name)) {
 						playersCfg.set("players." + name, 
-							SomeStuff.toHex(Integer.parseInt(value)<<2*8));	
+							Utils.toHex(Integer.parseInt(value)<<2*8));	
 					} else {
 						playersCfg.set("players." + name, 
-							SomeStuff.toHex((Integer.parseInt(value)<<2*8 | SomeStuff.fromHex(playersCfg.getString("players." + name))&0xFFFF)));
+							Utils.toHex((Integer.parseInt(value)<<2*8 | Utils.fromHex(playersCfg.getString("players." + name))&0xFFFF)));
 					}
-					sender.sendMessage(SomeStuff.format("You set clan (%s; %s) for player %s.", 
+					sender.sendMessage(Utils.format("You set clan (%s; %s) for player %s.", 
 							clansCfg.getString("clans." + value + ".label"), value, args[1]));
 					
 				} else {
@@ -85,12 +85,12 @@ public class SetClanCommand implements CommandInterface {
 					
 					if (!playersCfg.contains("players." + name)) {
 						playersCfg.set("players." + name, 
-							SomeStuff.toHex(Integer.parseInt(entry)<<2*8));
+							Utils.toHex(Integer.parseInt(entry)<<2*8));
 					} else {
 						playersCfg.set("players." + name, 
-							SomeStuff.toHex((Integer.parseInt(entry)<<2*8 | SomeStuff.fromHex(playersCfg.getString("players." + name))&0xFFFF)));
+							Utils.toHex((Integer.parseInt(entry)<<2*8 | Utils.fromHex(playersCfg.getString("players." + name))&0xFFFF)));
 					}
-					sender.sendMessage(SomeStuff.format("You set clan (%s; %s) for player %s.", 
+					sender.sendMessage(Utils.format("You set clan (%s; %s) for player %s.", 
 							clansCfg.getString("clans." + entry + ".label"), entry, args[1]));
 					
 					found = true;
@@ -103,7 +103,7 @@ public class SetClanCommand implements CommandInterface {
 		}
 		
 		Configs.saveCfgs();
-		SomeStuff.rebuildPlayerNickname(Main.server.getPlayer(name));
-		SomeStuff.initCfgsToScoreboard();
+		Utils.rebuildPlayerNickname(Main.server.getPlayer(name));
+		Utils.initCfgsToScoreboard();
 	}
 }

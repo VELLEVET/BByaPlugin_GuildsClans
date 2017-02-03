@@ -1,15 +1,15 @@
-package ru.OcelotJungle.BByaPlugin_GC.Commands.Commands;
+package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
 import java.util.List;
 import java.util.Locale;
 
 import org.bukkit.command.CommandSender;
 
-import ru.OcelotJungle.BByaPlugin_GC.Configs;
-import ru.OcelotJungle.BByaPlugin_GC.Main;
-import ru.OcelotJungle.BByaPlugin_GC.SomeStuff;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Manage.CommandInterface;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Manage.IncorrectValueException;
+import ru.ocelotjungle.bbyaplugin_gc.Configs;
+import ru.ocelotjungle.bbyaplugin_gc.Main;
+import ru.ocelotjungle.bbyaplugin_gc.Utils;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.IncorrectValueException;
 
 public class SetLevelCommand implements CommandInterface {
 
@@ -43,13 +43,13 @@ public class SetLevelCommand implements CommandInterface {
 		
 		try {
 			if (Integer.parseInt(args[2]) >= 0 && Integer.parseInt(args[2]) <= 255) {
-				Configs.playersCfg.set("players." + name, SomeStuff.toHex(SomeStuff
+				Configs.playersCfg.set("players." + name, Utils.toHex(Utils
 						.fromHex(Configs.playersCfg.getString("players." + name))& 0xFFFF00 | Integer.parseInt(args[2])));
-				sender.sendMessage(SomeStuff.format("You set guild level of player %s to %s.", args[1],args[2]));
+				sender.sendMessage(Utils.format("You set guild level of player %s to %s.", args[1],args[2]));
 				
 				Configs.saveCfgs();
-				SomeStuff.rebuildPlayerNickname(Main.server.getPlayer(name));
-				SomeStuff.initCfgsToScoreboard();
+				Utils.rebuildPlayerNickname(Main.server.getPlayer(name));
+				Utils.initCfgsToScoreboard();
 	
 			} else {
 				throw new IncorrectValueException("You can set only values from 0 to 255.");

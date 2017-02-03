@@ -1,12 +1,12 @@
-package ru.OcelotJungle.BByaPlugin_GC.Commands.Commands;
+package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import ru.OcelotJungle.BByaPlugin_GC.Configs;
-import ru.OcelotJungle.BByaPlugin_GC.SomeStuff;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Manage.CommandInterface;
+import ru.ocelotjungle.bbyaplugin_gc.Configs;
+import ru.ocelotjungle.bbyaplugin_gc.Utils;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 
 public class GetGuildCommand implements CommandInterface {
 	
@@ -38,8 +38,8 @@ public class GetGuildCommand implements CommandInterface {
 	public void execute(CommandSender sender, String label, String[] args) {
 		String name = args[1].toLowerCase();
 		
-		int guildId = (SomeStuff.fromHex(Configs.playersCfg.getString("players." + name))>>8)&0xFF;
-		sender.sendMessage(SomeStuff.format("%s's guild is (%s; %d).",
+		int guildId = (Utils.fromHex(Configs.playersCfg.getString("players." + name))>>8)&0xFF;
+		sender.sendMessage(Utils.format("%s's guild is (%s; %d).",
 			args[1], Configs.guildsCfg.getString("guilds." + guildId + ".engName"), guildId));
 	}
 }

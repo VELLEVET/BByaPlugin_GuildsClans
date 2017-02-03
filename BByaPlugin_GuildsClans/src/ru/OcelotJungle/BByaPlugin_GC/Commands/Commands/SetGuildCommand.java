@@ -1,4 +1,4 @@
-package ru.OcelotJungle.BByaPlugin_GC.Commands.Commands;
+package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +9,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import ru.OcelotJungle.BByaPlugin_GC.Configs;
-import ru.OcelotJungle.BByaPlugin_GC.Main;
-import ru.OcelotJungle.BByaPlugin_GC.SomeStuff;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Manage.CommandInterface;
-import ru.OcelotJungle.BByaPlugin_GC.Commands.Manage.IncorrectValueException;
+import ru.ocelotjungle.bbyaplugin_gc.Configs;
+import ru.ocelotjungle.bbyaplugin_gc.Main;
+import ru.ocelotjungle.bbyaplugin_gc.Utils;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.IncorrectValueException;
 
 public class SetGuildCommand implements CommandInterface {
 	
@@ -61,14 +61,14 @@ public class SetGuildCommand implements CommandInterface {
 				if (Integer.parseInt(value) == 0 || ((MemorySection) guildsCfg.get("guilds")).getValues(false).containsKey(value)) {
 					if (!playersCfg.contains("players." + name)) {
 						playersCfg.set("players." + name, 
-							SomeStuff.toHex(Integer.parseInt(value)<<8));
+							Utils.toHex(Integer.parseInt(value)<<8));
 						
 					} else {
 						playersCfg.set("players." + name, 
-							SomeStuff.toHex((Integer.parseInt(value)<<8 | SomeStuff.fromHex(playersCfg.getString("players." + name))&0xFF00FF)));
+							Utils.toHex((Integer.parseInt(value)<<8 | Utils.fromHex(playersCfg.getString("players." + name))&0xFF00FF)));
 					}
 					
-					sender.sendMessage(SomeStuff.format("You set guild (%s; %s) for player %s.", 
+					sender.sendMessage(Utils.format("You set guild (%s; %s) for player %s.", 
 							guildsCfg.getString("guilds." + args[2] + ".engName"), value, args[1]));
 					
 				} else {
@@ -85,14 +85,14 @@ public class SetGuildCommand implements CommandInterface {
 				if (guildsCfg.getString("guilds." + entry + ".engName").equalsIgnoreCase(value)) {
 					if (!playersCfg.contains("players." + name)) {
 						playersCfg.set("players." + name, 
-							SomeStuff.toHex(Integer.parseInt(entry)<<8));
+							Utils.toHex(Integer.parseInt(entry)<<8));
 						
 					} else {
 						playersCfg.set("players." + name, 
-							SomeStuff.toHex((Integer.parseInt(entry)<<8 | SomeStuff.fromHex(playersCfg.getString("players." + name))&0xFF00FF)));
+							Utils.toHex((Integer.parseInt(entry)<<8 | Utils.fromHex(playersCfg.getString("players." + name))&0xFF00FF)));
 					}
 					
-					sender.sendMessage(SomeStuff.format("You set guild (%s; %s) for player %s.", 
+					sender.sendMessage(Utils.format("You set guild (%s; %s) for player %s.", 
 							guildsCfg.getString("guilds." + entry + ".engName"), entry, args[1]));
 					found = true;
 					break;
@@ -104,7 +104,7 @@ public class SetGuildCommand implements CommandInterface {
 		}
 		
 		Configs.saveCfgs();
-		SomeStuff.rebuildPlayerNickname(Main.server.getPlayer(name));
-		SomeStuff.initCfgsToScoreboard();
+		Utils.rebuildPlayerNickname(Main.server.getPlayer(name));
+		Utils.initCfgsToScoreboard();
 	}
 }
