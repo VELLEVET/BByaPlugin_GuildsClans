@@ -22,7 +22,7 @@ public class Main extends JavaPlugin {
 	public static LinkedHashSet<Long> effectList;
 
 	public void onEnable() {
-		//ABCBDBHEJE
+		//ABCBDBHEJE111111111111
 		server = getServer();
 		scboard = getServer().getScoreboardManager().getMainScoreboard();
 		plugin = this;
