@@ -47,9 +47,9 @@ public class ScheduledEffects implements Runnable {
 					String name = player.getName().toLowerCase(Locale.ENGLISH);
 					int playerInfo = Utils.fromHex(Configs.playersCfg.getString("players." + name));
 
-					// If effect's clan = player's clan AND eventCheck = 0
+					// If effect's clan = player's clan AND EventCheck = 0
 					if ((((playerInfo >> 1 * 8) & 0xFF) == ((effectInfo >> 5 * 8) & 0xFF))
-							&& (Main.scboard.getObjective("eventCheck").getScore(name).getScore() == 0)) {
+							&& (Main.scboard.getObjective("EventCheck").getScore(name).getScore() == 0)) {
 
 						// If player's level upper or equal to min effect level
 						// AND player's level lower or equal to max effect level
