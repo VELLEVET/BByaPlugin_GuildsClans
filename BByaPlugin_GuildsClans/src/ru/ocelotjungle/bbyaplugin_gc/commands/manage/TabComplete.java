@@ -25,7 +25,6 @@ public class TabComplete implements TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		
-		//Logging.log(sender.);
 		try {
 			if (args.length == 1) {
 				List<String> result = new ArrayList<String>();

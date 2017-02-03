@@ -1,7 +1,9 @@
 package ru.ocelotjungle.bbyaplugin_gc;
 
 /*******************************************
- * * Writing logs and errors in console * *
+ *                                         *
+ *   Writing logs and errors in console    *
+ *                                         *
  *******************************************/
 
 public class Logging {

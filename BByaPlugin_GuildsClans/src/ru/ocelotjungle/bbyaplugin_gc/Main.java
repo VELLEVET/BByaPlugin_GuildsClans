@@ -22,13 +22,11 @@ public class Main extends JavaPlugin {
 	public static LinkedHashSet<Long> effectList;
 
 	public void onEnable() {
-		//ABCBDBHEJE111111111111
 		server = getServer();
 		scboard = getServer().getScoreboardManager().getMainScoreboard();
 		plugin = this;
 
 		scboard.resetScores("@p");
-		scboard.resetScores("@a");
 
 		Configs.reloadCfgs();
 		Utils.initEffects();
