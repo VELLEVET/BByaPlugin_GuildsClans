@@ -62,7 +62,7 @@ public class Utils {
 		reloadCfgs();
 		
 		if(!playersCfg.contains("players") || ((MemorySection) playersCfg.get("players")).getValues(false).size() == 0) {
-			Logging.log("[BByaPlugin_GuildsClans] List of players is empty");
+			Logger.log("[BByaPlugin_GuildsClans] List of players is empty");
 			return;
 		}
 		
@@ -85,7 +85,7 @@ public class Utils {
 					scboard.getObjective(format("T_%s", guildsCfg.getString(format("guilds.%d.engName", ((playerInfo>>8)&0xFF)))))
 							.getScore(name).setScore(playerInfo&0xFF);
 				} else {
-					Logging.errF("There's no guild with this ID (%s; %s)", name, Integer.toHexString(((playerInfo>>8)&0xFF)));
+					Logger.errF("There's no guild with this ID (%s; %s)", name, Integer.toHexString(((playerInfo>>8)&0xFF)));
 				}
 			}
 			
@@ -95,7 +95,7 @@ public class Utils {
 				if (clansCfg.getString(format("clans.%d.label", (playerInfo>>16)&0xFF)) != null) {
 					scboard.getObjective("ClanID").getScore(name).setScore((playerInfo>>16)&0xFF);
 				} else {
-					Logging.errF("There's no clan with this ID (%s; %d)", name, ((playerInfo>>16)&0xFF));
+					Logger.errF("There's no clan with this ID (%s; %d)", name, ((playerInfo>>16)&0xFF));
 				}
 			}
 		}

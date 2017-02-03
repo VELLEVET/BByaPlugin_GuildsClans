@@ -13,12 +13,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class ScheduledEffects implements Runnable {
+public class EffectScheduler implements Runnable {
 
 	private static final World world = Main.server.getWorld("world");
 	private static boolean morning = false;
 
-	public ScheduledEffects(Main plugin) {
+	public EffectScheduler(Main plugin) {
 		Main.server.getScheduler().cancelAllTasks();
 		Main.server.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L,
 				Long.parseLong(Configs.mainCfg.getString("frequency").replaceAll("[^0-9]", "")));

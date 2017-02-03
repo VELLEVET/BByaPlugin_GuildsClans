@@ -6,7 +6,7 @@ package ru.ocelotjungle.bbyaplugin_gc;
  *                                         *
  *******************************************/
 
-public class Logging {
+public class Logger {
 
 	public static void log(Object Log) {
 		Main.server.getLogger().info(Log == null ? "null" : Log.toString());

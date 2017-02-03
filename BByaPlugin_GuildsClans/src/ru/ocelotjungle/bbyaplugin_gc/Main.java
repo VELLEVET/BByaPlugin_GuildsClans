@@ -35,12 +35,12 @@ public class Main extends JavaPlugin {
 		new CommandManager(this);
 		new TabComplete(this);
 		new PlayerJoinEventListener(this);
-		new ScheduledEffects(this);
+		new EffectScheduler(this);
 
-		Logging.log("[BByaPlugin_GuildsClans] Enabled");
+		Logger.log("[BByaPlugin_GuildsClans] Enabled");
 	}
 
 	public void onDisable() {
-		Logging.log("[BByaPlugin_GuildsClans] Disabled");
+		Logger.log("[BByaPlugin_GuildsClans] Disabled");
 	}
 }

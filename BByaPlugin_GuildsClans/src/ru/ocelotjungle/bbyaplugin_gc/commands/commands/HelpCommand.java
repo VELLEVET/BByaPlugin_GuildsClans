@@ -7,7 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import ru.ocelotjungle.bbyaplugin_gc.Logging;
+import ru.ocelotjungle.bbyaplugin_gc.Logger;
 import ru.ocelotjungle.bbyaplugin_gc.Main;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandManager;

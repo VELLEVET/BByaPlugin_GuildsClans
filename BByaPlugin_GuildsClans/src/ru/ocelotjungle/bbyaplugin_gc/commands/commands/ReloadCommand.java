@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import ru.ocelotjungle.bbyaplugin_gc.Configs;
 import ru.ocelotjungle.bbyaplugin_gc.Main;
-import ru.ocelotjungle.bbyaplugin_gc.ScheduledEffects;
+import ru.ocelotjungle.bbyaplugin_gc.EffectScheduler;
 import ru.ocelotjungle.bbyaplugin_gc.Utils;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 
@@ -44,7 +44,7 @@ public class ReloadCommand implements CommandInterface {
 		Utils.initCfgsToScoreboard();
 		Utils.initEffects();
 		
-		new ScheduledEffects(Main.plugin);
+		new EffectScheduler(Main.plugin);
 		
 		for (Player player : Main.server.getOnlinePlayers()) {
 			Utils.rebuildPlayerNickname(player);

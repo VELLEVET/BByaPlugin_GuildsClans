@@ -18,7 +18,7 @@ public class Configs {
 	
 	public static void saveCfgs() {
 		try { Configs.playersCfg.save(new File(Main.plugin.getDataFolder(), "players.yml")); }
-		catch (IOException io) { Logging.errF("Cannot save players config to disk. Reason: %s", io.toString()); }
+		catch (IOException io) { Logger.errF("Cannot save players config to disk. Reason: %s", io.toString()); }
 		
 		// No need to save these cfgs
 		/*try { Configs.clansCfg.save(new File(Main.plugin.getDataFolder(), "clans.yml")); }
