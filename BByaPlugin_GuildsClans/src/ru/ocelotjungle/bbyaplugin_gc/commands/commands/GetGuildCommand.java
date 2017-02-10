@@ -4,29 +4,31 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import ru.ocelotjungle.bbyaplugin_gc.Configs;
-import ru.ocelotjungle.bbyaplugin_gc.Utils;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.guildsCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.format;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 
 public class GetGuildCommand implements CommandInterface {
 	
-	private static final int argumentCount = 2;
-	private static final String usage = "getguild <player>",
-								description = "returns player's guild";
+	private static final int ARGUMENT_COUNT = 2;
+	private static final String USAGE = "getguild <player>",
+								DESCRIPTION = "returns player's guild";
 	
 	@Override
 	public int getArgumentCount() {
-		return argumentCount;
+		return ARGUMENT_COUNT;
 	}
 	
 	@Override
 	public String getUsage() {
-		return usage;
+		return USAGE;
 	}
 	
 	@Override
 	public String getDescription() {
-		return description;
+		return DESCRIPTION;
 	}
 	
 	@Override
@@ -38,8 +40,8 @@ public class GetGuildCommand implements CommandInterface {
 	public void execute(CommandSender sender, String label, String[] args) {
 		String name = args[1].toLowerCase();
 		
-		int guildId = (Utils.fromHex(Configs.playersCfg.getString("players." + name))>>8)&0xFF;
-		sender.sendMessage(Utils.format("%s's guild is (%s; %d).",
-			args[1], Configs.guildsCfg.getString("guilds." + guildId + ".engName"), guildId));
+		int guild = (fromHex(playersCfg.getString("players." + name))>>1*8) & 0xFF;
+		sender.sendMessage(format("%s's guild is (%s; %d).",
+			args[1], guildsCfg.getString(guild + ".engName"), guild));
 	}
 }

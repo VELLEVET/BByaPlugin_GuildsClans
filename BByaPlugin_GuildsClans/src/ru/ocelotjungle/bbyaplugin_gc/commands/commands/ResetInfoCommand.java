@@ -2,41 +2,47 @@ package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
 
-import ru.ocelotjungle.bbyaplugin_gc.Configs;
-import ru.ocelotjungle.bbyaplugin_gc.Main;
-import ru.ocelotjungle.bbyaplugin_gc.Utils;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.guildsCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.saveCfgs;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.plugin;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 
 public class ResetInfoCommand implements CommandInterface {
 	
-	private static final int argumentCount = 2;
-	private static final String usage = "resetinfo <player>",
-								description = "resets player's info";
+	private static final int ARGUMENT_COUNT = 2;
+	private static final String USAGE = "resetinfo <player>",
+								DESCRIPTION = "resets player's info";
 	
 	@Override
 	public int getArgumentCount() {
-		return argumentCount;
+		return ARGUMENT_COUNT;
 	}
 	
 	@Override
 	public String getUsage() {
-		return usage;
+		return USAGE;
 	}
 	
 	@Override
 	public String getDescription() {
-		return description;
+		return DESCRIPTION;
 	}
 	
 	@Override
 	public List<String> getTabComplete(String[] args) {
 		List<String> result = new ArrayList<String>();
 		
-		for (String name : ((MemorySection) Configs.playersCfg.get("players")).getValues(false).keySet()) {
+		args[1] = args[1].toLowerCase();
+		
+		for (String name : ((MemorySection) playersCfg.get("players")).getValues(false).keySet()) {
 			if (name.startsWith(args[1])) {
 				result.add(name);
 			}
@@ -49,17 +55,23 @@ public class ResetInfoCommand implements CommandInterface {
 	public void execute(CommandSender sender, String label, String[] args) {
 		String name = args[1].toLowerCase();
 		
-		if (Utils.fromHex(Configs.playersCfg.getString("players." + name)) != 0) {
-			Configs.playersCfg.set("players." + name, "0x0");
-			sender.sendMessage(Utils.format("You set %s's info to 0.", args[1]));
+		int playerInfo = fromHex(playersCfg.getString("players." + name)) & 0xFFFFFF;
+		if (playerInfo != 0) {
+			playersCfg.set("players." + name, "0x0");
+			sender.sendMessage(format("You set %s's info to 0.", args[1]));
 		} else {
-			Configs.playersCfg.set("players." + name, null);
-			sender.sendMessage(Utils.format("You reset %s's info.", args[1]));
+			playersCfg.set("players." + name, null);
+			sender.sendMessage(format("You reset %s's info.", args[1]));
 		}
 		
-		Configs.saveCfgs();
-		Utils.rebuildPlayerNickname(Main.plugin.getServer().getPlayer(args[1]));
-		Utils.initCfgsToScoreboard();
+		scboard.getObjective("ClanID").getScore(name).setScore(0);
+		for (Entry<String, Object> entry2 : guildsCfg.getValues(false).entrySet()) {
+			scboard.getObjective(format("T_%s", guildsCfg.getString(entry2.getKey() + ".engName")))
+					.getScore(name).setScore(0);
+		}
+		
+		saveCfgs();
+		rebuildPlayerNickname(plugin.getServer().getPlayer(args[1]));
 	}
 
 }

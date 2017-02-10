@@ -6,9 +6,12 @@ package ru.ocelotjungle.bbyaplugin_gc;
  *                                         *
  *******************************************/
 
-import java.util.LinkedHashSet;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.checkObjectives;
+
+import java.util.LinkedHashMap;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Scoreboard;
 
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandManager;
@@ -19,12 +22,14 @@ public class Main extends JavaPlugin {
 	public static org.bukkit.Server server;
 	public static Scoreboard scboard;
 	public static Main plugin;
-	public static LinkedHashSet<Long> effectList;
+	public static LinkedHashMap<Long, PotionEffect> effectList;
 
 	public void onEnable() {
 		server = getServer();
 		scboard = getServer().getScoreboardManager().getMainScoreboard();
 		plugin = this;
+		
+		checkObjectives();
 
 		scboard.resetScores("@p");
 
@@ -36,7 +41,7 @@ public class Main extends JavaPlugin {
 		new TabComplete(this);
 		new PlayerJoinEventListener(this);
 		new EffectScheduler(this);
-
+		
 		Logger.log("[BByaPlugin_GuildsClans] Enabled");
 	}
 

@@ -1,45 +1,61 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-import ru.ocelotjungle.bbyaplugin_gc.Configs;
-import ru.ocelotjungle.bbyaplugin_gc.Utils;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.clansCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.format;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 
 public class GetClanCommand implements CommandInterface {
 
-	private static final int argumentCount = 2;
-	private static final String usage = "getclan <player>",
-								description = "returns player's clan";
+	private static final int ARGUMENT_COUNT = 2;
+	private static final String USAGE = "getclan <player>",
+								DESCRIPTION = "returns player's clan";
 	
 	@Override
 	public int getArgumentCount() {
-		return argumentCount;
+		return ARGUMENT_COUNT;
 	}
 	
 	@Override
 	public String getUsage() {
-		return usage;
+		return USAGE;
 	}
 	
 	@Override
 	public String getDescription() {
-		return description;
+		return DESCRIPTION;
 	}
 	
 	@Override
 	public List<String> getTabComplete(String[] args) {
-		return null;
+		List<String> result = new ArrayList<String>();
+		
+		args[2] = args[2].toLowerCase();
+		
+		for (Player player : server.getOnlinePlayers()) {
+			String playerName = player.getName();
+			
+			if (playerName.toLowerCase().startsWith(args[2])) {
+				result.add(playerName);
+			}
+		}
+		
+		return result;
 	}
 	
 	@Override
 	public void execute(CommandSender sender, String label, String[] args) {
 		String name = args[1].toLowerCase();
 		
-		int clanId = (Utils.fromHex(Configs.playersCfg.getString("players." + name))>>2*8)&0xFF;
-		sender.sendMessage(Utils.format("%s's clan is (%s; %d).",
-			args[1], Configs.clansCfg.getString("clans." + clanId + ".label"), clanId));
+		int clan = (fromHex(playersCfg.getString("players." + name))>>2*8) & 0xFF;
+		sender.sendMessage(format("%s's clan is (%s; %d).", args[1], clansCfg.getString(clan + ".label"), clan));
 	}
 }

@@ -3,47 +3,49 @@ package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.md_5.bungee.api.ChatColor;
-
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.MemorySection;
-import org.bukkit.configuration.file.FileConfiguration;
 
-import ru.ocelotjungle.bbyaplugin_gc.Configs;
-import ru.ocelotjungle.bbyaplugin_gc.Main;
-import ru.ocelotjungle.bbyaplugin_gc.Utils;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.saveCfgs;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.clansCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.IncorrectValueException;
 
 public class SetClanCommand implements CommandInterface {
 	
-	private static final int argumentCount = 3;
-	private static final String usage = "setclan <player> <clan ID/name>",
-								description = "sets player's clan";
+	private static final int ARGUMENT_COUNT = 3;
+	private static final String USAGE = "setclan <player> <clan ID/name>",
+								DESCRIPTION = "sets player's clan";
 	
 	@Override
 	public int getArgumentCount() {
-		return argumentCount;
+		return ARGUMENT_COUNT;
 	}
 	
 	@Override
 	public String getUsage() {
-		return usage;
+		return USAGE;
 	}
 	
 	@Override
 	public String getDescription() {
-		return description;
+		return DESCRIPTION;
 	}
 	
 	@Override
 	public List<String> getTabComplete(String[] args) {
 		List<String> result = new ArrayList<String>();
 		
-		for (String clanId : ((MemorySection) Configs.clansCfg.get("clans")).getValues(false).keySet()) {
-			String clanLabel = Configs.clansCfg.getString("clans." + clanId + ".label");
+		args[2] = args[2].toLowerCase();
+		
+		for (String clanId : clansCfg.getValues(false).keySet()) {
+			String clanLabel = clansCfg.getString(clanId + ".label");
 			
-			if (clanLabel.startsWith(args[2])) {
+			if (clanLabel.toLowerCase().startsWith(args[2])) {
 				result.add(clanLabel);
 			}
 		}
@@ -52,26 +54,28 @@ public class SetClanCommand implements CommandInterface {
 	}
 
 	@Override
-	public void execute(CommandSender sender, String label, String[] args) {			
-		FileConfiguration clansCfg = Configs.clansCfg, playersCfg = Configs.playersCfg;
-		String name = args[1].toLowerCase(), value = args[2];
+	public void execute(CommandSender sender, String label, String[] args) {
+		String name = args[1].toLowerCase();
+		int playerInfo = fromHex(playersCfg.getString("players." + name)) & 0xFFFFFF;
 		
 		try {
-			if (Integer.parseInt(value) >= 0 && Integer.parseInt(value) <= 255) {
-				if (Integer.parseInt(value) == 0 || ((MemorySection) Configs.clansCfg.get("clans")).getValues(false).containsKey(value)) {
+			int clan = Integer.parseInt(args[2]);
+			if (clan >= 0 && clan <= 255) {
+				if (clan == 0 || clansCfg.getValues(false).containsKey(clan + "")) {
 					
-					if (!playersCfg.contains("players." + name)) {
-						playersCfg.set("players." + name, 
-							Utils.toHex(Integer.parseInt(value)<<2*8));	
+					if (playersCfg.contains("players." + name)) {
+						playersCfg.set("players." + name, toHex(clan<<2*8 | playerInfo&0xFFFF));
+						
 					} else {
-						playersCfg.set("players." + name, 
-							Utils.toHex((Integer.parseInt(value)<<2*8 | Utils.fromHex(playersCfg.getString("players." + name))&0xFFFF)));
+						playersCfg.set("players." + name, toHex(clan<<2*8));	
 					}
-					sender.sendMessage(Utils.format("You set clan (%s; %s) for player %s.", 
-							clansCfg.getString("clans." + value + ".label"), value, args[1]));
+					sender.sendMessage(format("You set clan (%s; %s) for player %s.", 
+							clansCfg.getString(clan + ".label"), clan, args[1]));
+					
+					scboard.getObjective("ClanID").getScore(name).setScore(clan);
 					
 				} else {
-					sender.sendMessage(ChatColor.RED + "Clan with ID/Name '" + value + "' doesn't exist.");
+					sender.sendMessage(ChatColor.RED + "Clan with ID '" + clan + "' doesn't exist.");
 				}
 				
 			} else {
@@ -79,31 +83,33 @@ public class SetClanCommand implements CommandInterface {
 			}
 			
 		} catch (NumberFormatException nfe) {
+			String clanName = args[2];
 			boolean found = false;
-			for (String entry : ((MemorySection) clansCfg.get("clans")).getValues(false).keySet()) {
-				if (clansCfg.getString("clans." + entry + ".label").equalsIgnoreCase(value)) {
+			for (String clan : clansCfg.getValues(false).keySet()) {
+				if (clansCfg.getString(clan + ".label").equalsIgnoreCase(clanName)) {
 					
-					if (!playersCfg.contains("players." + name)) {
-						playersCfg.set("players." + name, 
-							Utils.toHex(Integer.parseInt(entry)<<2*8));
+					if (playersCfg.contains("players." + name)) {
+						playersCfg.set("players." + name, toHex((Byte.parseByte(clan)<<2*8 | playerInfo&0xFFFF)));
+						
 					} else {
-						playersCfg.set("players." + name, 
-							Utils.toHex((Integer.parseInt(entry)<<2*8 | Utils.fromHex(playersCfg.getString("players." + name))&0xFFFF)));
+						playersCfg.set("players." + name, toHex(Byte.parseByte(clan)<<2*8));
 					}
-					sender.sendMessage(Utils.format("You set clan (%s; %s) for player %s.", 
-							clansCfg.getString("clans." + entry + ".label"), entry, args[1]));
+					sender.sendMessage(format("You set clan (%s; %s) for player %s.", 
+							clansCfg.getString(clan + ".label"), clan, args[1]));
+					
+					scboard.getObjective("ClanID").getScore(name).setScore(Integer.parseInt(clan));
 					
 					found = true;
 					break;
 				}
 			}
 			if (!found) {
-				sender.sendMessage(ChatColor.RED + "Clan with ID/Name '" + value + "' doesn't exist.");
+				sender.sendMessage(ChatColor.RED + "Clan with Name '" + clanName + "' doesn't exist.");
 			}
 		}
 		
-		Configs.saveCfgs();
-		Utils.rebuildPlayerNickname(Main.server.getPlayer(name));
-		Utils.initCfgsToScoreboard();
+		saveCfgs();
+		rebuildPlayerNickname(server.getPlayer(name));
+		initCfgsToScoreboard();
 	}
 }

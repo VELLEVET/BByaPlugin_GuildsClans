@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 
 public interface CommandInterface {
 	
-	int getArgumentCount();
+	public int getArgumentCount();
 	
 	String getUsage();
 	String getDescription();

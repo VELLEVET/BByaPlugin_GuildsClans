@@ -1,2 +1,11 @@
-# Frequency of issuance of effects in ticks
-frequency: 100L
+# Frequency of issuance of effects in ticks (default: 100 (5 seconds))
+frequency: 100
+
+# Effect duration in ticks (default: 72000 (1 hour))
+effectDuration: 72000
+
+# Does step affects money cost of new level (default: false)
+stepAffectsMoney: false
+
+#Does step affects experience bottle cost of new level (default: true)
+stepAffectsBottles: true

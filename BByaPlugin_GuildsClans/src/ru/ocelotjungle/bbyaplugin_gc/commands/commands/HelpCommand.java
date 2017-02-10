@@ -15,23 +15,23 @@ import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandManager;
 @SuppressWarnings("unused")
 public class HelpCommand implements CommandInterface {
 	
-	private static final int argumentCount = 1;
-	private static final String usage = "help",
-								description = "displays help";
+	private static final int ARGUMENT_COUNT = 1;
+	private static final String USAGE = "help",
+								DESCRIPTION = "displays help";
 	
 	@Override
 	public int getArgumentCount() {
-		return argumentCount;
+		return ARGUMENT_COUNT;
 	}
 	
 	@Override
 	public String getUsage() {
-		return usage;
+		return USAGE;
 	}
 	
 	@Override
 	public String getDescription() {
-		return description;
+		return DESCRIPTION;
 	}
 	
 	@Override
@@ -45,7 +45,7 @@ public class HelpCommand implements CommandInterface {
 		String start = new String(command + "/" + label + " ");
 		
 		sender.sendMessage(ends + "<------------ Help for Guilds&Clans ------------>");
-		for (Map.Entry<String, CommandInterface> entry : CommandManager.commands.entrySet()) {
+		for (Map.Entry<String, CommandInterface> entry : CommandManager.COMMANDS.entrySet()) {
 			sender.sendMessage(start + entry.getKey() + " " + desc + "- " + entry.getValue().getDescription());
 		}
 		sender.sendMessage(ends + "<------------ Help for Guilds&Clans ------------>");

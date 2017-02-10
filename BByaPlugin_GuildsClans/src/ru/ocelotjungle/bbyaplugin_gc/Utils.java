@@ -6,22 +6,80 @@ package ru.ocelotjungle.bbyaplugin_gc;
  *                                         *
  *******************************************/
 
-import java.util.LinkedHashSet;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.clansCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.guildsCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.mainCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.reloadCfgs;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.reloadPlayersCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Logger.errF;
+import static ru.ocelotjungle.bbyaplugin_gc.Logger.log;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.effectList;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.Scoreboard;
 
-public class Utils {
+public abstract class Utils {
 	
-	private static FileConfiguration playersCfg, guildsCfg, clansCfg;
-	private static Scoreboard scboard;
+	public static enum EffectType {
+		NULL(null),
+		SPEED(PotionEffectType.SPEED),
+		SLOWNESS(PotionEffectType.SLOW),
+		HASTE(PotionEffectType.FAST_DIGGING),
+		MINING_FATIGUE(PotionEffectType.SLOW_DIGGING),
+		STRENGTH(PotionEffectType.INCREASE_DAMAGE),
+		INSTANT_HEALTH(PotionEffectType.HEAL),
+		INSTANT_DAMAGE(PotionEffectType.HARM),
+		JUMP_BOOST(PotionEffectType.JUMP),
+		NAUSEA(PotionEffectType.CONFUSION),
+		REGENERATION(PotionEffectType.REGENERATION),
+		RESISTANCE(PotionEffectType.DAMAGE_RESISTANCE),
+		FIRE_RESISTANCE(PotionEffectType.FIRE_RESISTANCE),
+		WATER_BREATHING(PotionEffectType.WATER_BREATHING),
+		INVISIBILITY(PotionEffectType.INVISIBILITY),
+		BLINDNESS(PotionEffectType.BLINDNESS),
+		NIGHT_VISION(PotionEffectType.NIGHT_VISION),
+		HUNGER(PotionEffectType.HUNGER),
+		WEAKNESS(PotionEffectType.WEAKNESS),
+		POISON(PotionEffectType.POISON),
+		WITHER(PotionEffectType.WITHER),
+		HEALTH_BOOST(PotionEffectType.HEALTH_BOOST),
+		ABSORPTION(PotionEffectType.ABSORPTION),
+		SATURATION(PotionEffectType.SATURATION),
+		GLOWING(PotionEffectType.GLOWING),
+		LEVITATION(PotionEffectType.LEVITATION),
+		LUCK(PotionEffectType.LUCK),
+		UNLUCK(PotionEffectType.UNLUCK);
+		
+		private final PotionEffectType spigotPotionEffectType;
+		
+		private EffectType(PotionEffectType type) {
+			this.spigotPotionEffectType = type;
+		}
+		
+		public static PotionEffectType getByName(String name) {
+			try {
+				return valueOf(name.toUpperCase()).getEffectType();
+			} catch (IllegalArgumentException iae) {
+				Logger.err("There is no effect with name " + name + ", used Glowing.");
+				return PotionEffectType.GLOWING;
+			}
+		}
+		
+		public PotionEffectType getEffectType() {
+			return spigotPotionEffectType;
+		}
+	}
 	
 	public static String format(String source, Object... args) {
 		return String.format(source, args);
@@ -48,54 +106,54 @@ public class Utils {
 	public static int fromHex(String hex) {
 		return hex==null? 0 : Integer.parseInt(hex.toUpperCase(Locale.ENGLISH).replaceAll("(0X|H| |[^0-9A-F])", ""), 16);
 	}
-
-	private static void reloadCfgs() {
-		Configs.reloadCfgs();
-		playersCfg = Configs.playersCfg;
-		guildsCfg = Configs.guildsCfg;
-		clansCfg = Configs.clansCfg;
-		scboard = Main.scboard;
-	}
 	
 	public static void initCfgsToScoreboard() {
 		
 		reloadCfgs();
 		
 		if(!playersCfg.contains("players") || ((MemorySection) playersCfg.get("players")).getValues(false).size() == 0) {
-			Logger.log("[BByaPlugin_GuildsClans] List of players is empty");
+			log("[BByaPlugin_GuildsClans] List of players is empty");
 			return;
 		}
 		
 		for (Map.Entry<String, Object> entry : ((MemorySection) playersCfg.get("players")).getValues(false).entrySet()) {
 			
 			String name = entry.getKey().toLowerCase(Locale.ENGLISH);
-			int playerInfo = fromHex(entry.getValue().toString());
+			int playerInfo = fromHex(entry.getValue().toString()),
+				clan = (playerInfo>>2*8)&0xFF,
+				guild = (playerInfo>>1*8)&0xFF,
+				level = playerInfo&0xFF;
 			
-			// Unusuable Scoreboard objective "playerInfo"
+			// Unusued Scoreboard objective "playerInfo"
 			//scboard.getObjective("playerInfo").getScore(name).setScore(playerInfo); 
 			
-			for (Entry<String, Object> entry2 : ((MemorySection) guildsCfg.get("guilds")).getValues(false).entrySet()) {
-				scboard.getObjective(format("T_%s", guildsCfg.getString(format("guilds.%s.engName", entry2.getKey()))))
-						.getScore(name).setScore(0);
+			for (Entry<String, Object> entry2 : guildsCfg.getValues(false).entrySet()) {
+				String objectiveName = format("T_%s", guildsCfg.getString(entry2.getKey() + ".engName"));
+				if (scboard.getObjective(objectiveName) == null) {
+					scboard.registerNewObjective(objectiveName, "dummy");
+				}
+				scboard.getObjective(objectiveName).getScore(name).setScore(0);
 			}
 			
 			// If player is a member of any guild, which is in the config
-			if ((playerInfo&0xFF00) != 0) {
-				if (guildsCfg.getString(format("guilds.%d.engName", ((playerInfo>>8)&0xFF))) != null) {
-					scboard.getObjective(format("T_%s", guildsCfg.getString(format("guilds.%d.engName", ((playerInfo>>8)&0xFF)))))
-							.getScore(name).setScore(playerInfo&0xFF);
+			if (guild != 0) {
+				if (guildsCfg.contains(guild + "")) {
+					scboard.getObjective(format("T_%s", guildsCfg.getString(guild + ".engName")))
+							.getScore(name).setScore(level);
+					
 				} else {
-					Logger.errF("There's no guild with this ID (%s; %s)", name, Integer.toHexString(((playerInfo>>8)&0xFF)));
+					errF("There's no guild with this ID (%s; %d)", name, guild);
 				}
 			}
 			
 			
 			// If player is a member of any clan, which is in the config
-			if ((playerInfo&0xFF0000) != 0) {
-				if (clansCfg.getString(format("clans.%d.label", (playerInfo>>16)&0xFF)) != null) {
-					scboard.getObjective("ClanID").getScore(name).setScore((playerInfo>>16)&0xFF);
+			if (clan != 0) {
+				if (clansCfg.contains(clan + "")) {
+					scboard.getObjective("ClanID").getScore(name).setScore(clan);
+					
 				} else {
-					Logger.errF("There's no clan with this ID (%s; %d)", name, ((playerInfo>>16)&0xFF));
+					errF("There's no clan with this ID (%s; %d)", name, clan);
 				}
 			}
 		}
@@ -104,21 +162,64 @@ public class Utils {
 	public static void initEffects() {
 		reloadCfgs();
 		
-		Main.effectList = new LinkedHashSet<Long>();
+		effectList = new LinkedHashMap<Long, PotionEffect>();
 		
-		for(String entry : ((MemorySection) guildsCfg.get("guilds")).getValues(false).keySet()) {
-			for(String entry2 : ((MemorySection) guildsCfg.get(format("guilds.%s.effects", entry))).getValues(false).keySet()) {
+		for(String guild : guildsCfg.getValues(false).keySet()) {
+			try { Short.parseShort(guild); } 
+			catch (NumberFormatException nfe) {
+				Logger.err(format("There's incorrect value of guild number (%s).", guild));
+				continue;
+			}
+			for(String effectNumber : ((MemorySection) guildsCfg.get(guild + ".effects")).getValues(false).keySet()) {
+				try { Short.parseShort(effectNumber); } 
+				catch (NumberFormatException nfe) {
+					Logger.err(format("There's incorrect value of effect number (%s; %s).", guild, effectNumber));
+					continue;
+				}
 				
-				MemorySection effectInfo = (MemorySection) guildsCfg.get(format("guilds.%s.effects.%s", entry, entry2));
-				
-				Main.effectList.add(
-						((effectInfo.getBoolean("morning")?0x02L:0x01L) << 6*8) | 
-						(Long.parseLong(entry) << 5*8) |
-						(Long.parseLong(entry2) << 4*8) |
-						(PotionEffectType.getByName(effectInfo.getString("name")).hashCode() << 3*8) |
-						(effectInfo.getLong("level") << 2*8) |
-						((int) effectInfo.getList("levels").get(0) << 1*8) |
-						((int)effectInfo.getList("levels").get(1)));
+				MemorySection effectInfo = (MemorySection) guildsCfg.get(guild + ".effects." + effectNumber);
+				try {
+					for (Entry<String, Object> effect : ((MemorySection) effectInfo.get("levels")).getValues(false).entrySet()) {
+						try { Short.parseShort(effect.getKey()); } 
+						catch (NumberFormatException nfe) {
+							Logger.err(format("There's incorrect value of effect level (%s.%s; %s).", guild, effectNumber, effect.getKey()));
+							continue;
+						}
+						
+						int minLevel = 0, maxLevel = 255;
+						
+						if (effect.getValue() instanceof Integer && (int) effect.getValue() > 0) {
+							maxLevel = (int) effect.getValue();
+							
+						} else if (effect.getValue() instanceof ArrayList) {
+							ArrayList<?> value = (ArrayList<?>) effect.getValue();
+							
+							if (value.size() == 1 && (int) value.get(0) > 0) {
+								minLevel = (int) value.get(0);
+								 
+							} else if (value.size() >= 2) {
+								minLevel = (int) value.get(0);
+								maxLevel = (int) value.get(1);
+							}
+							
+						}
+						
+						effectList.put(
+								(((effectInfo.getBoolean("morning")?0x02L:0x01L) << 5*8) | 	// Is it morning effect or no
+								(Long.parseLong(guild) << 4*8) | 			// Guild ID
+								(Long.parseLong(effectNumber) << 3*8) |		// Effect ID
+								(Long.parseLong(effect.getKey()) << 2*8) |	// Effect level
+								(minLevel << 1*8) |							// Min guild level
+								(maxLevel)),								// Max guild level
+								
+								new PotionEffect(
+								(EffectType.getByName(effectInfo.getString("name"))), 
+								mainCfg.getInt("effectDuration"),
+								Integer.parseInt(effect.getKey()) - 1, true, false));
+					}
+				} catch (NullPointerException npe) {
+					Logger.err("Not found any effect at " + guild + "." + effectNumber);
+				}
 			}
 		}
 	}
@@ -126,51 +227,51 @@ public class Utils {
 	public static void rebuildPlayerNickname(Player player) {
 		if (player == null) return;
 		
-		Configs.reloadPlayersCfg();
+		reloadPlayersCfg();
 		
-		String name = player.getName().toLowerCase(Locale.ENGLISH);
+		Locale eng = Locale.ENGLISH;
+		String name = player.getName().toLowerCase(eng);
 		
-		int playerInfo = fromHex(playersCfg.getString("players." + name)) & 0xFFFFFF;
+		int playerInfo = fromHex(playersCfg.getString("players." + name)) & 0xFFFFFF,
+			clan = (playerInfo>>2*8)&0xFF,
+			guild = (playerInfo>>1*8)&0xFF,
+			level = playerInfo&0xFF;
 		
 		StringBuilder newName = new StringBuilder();
 		
 		// If player is a member of any clan AND this clan exists
-		if ((playerInfo&0xFF0000) != 0 && clansCfg.contains(format("clans.%d.label", ((playerInfo>>2*8)&0xFF)))) {
-			newName.append(ChatColor.valueOf(clansCfg.getString(format("clans.%d.color",((playerInfo>>2*8)&0xFF))).toUpperCase(Locale.ENGLISH)))
-			.append(format("[%s] ", clansCfg.getString(format("clans.%d.label", ((playerInfo>>2*8)&0xFF)))))
+		if (clan != 0 && clansCfg.contains(clan + ".label")) {
+			newName.append(ChatColor.valueOf(clansCfg.getString(clan + ".color").toUpperCase(eng)))
+			.append(format("[%s] ", clansCfg.getString(clan + ".label")))
 			.append(ChatColor.RESET);
 		}
 		
 		// If player have any Scoreboard team
-		if (Main.scboard.getEntryTeam(player.getName()) != null) {
-			newName.append(Main.scboard.getEntryTeam(player.getName()).getPrefix())
-			.append(player.getName());
+		if (scboard.getEntryTeam(player.getName()) != null) {
+			newName.append(Main.scboard.getEntryTeam(player.getName()).getPrefix());
 			
-			// If guilds ID and level isn't equal to 0 AND this guilds exists
-			if ((playerInfo&0xFF00) != 0 && (playerInfo&0xFF) != 0 && guildsCfg.contains(format("guilds.%d.engName", ((playerInfo>>8)&0xFF)))) {
-				newName.append(ChatColor.WHITE + " | ")
-				.append(ChatColor.valueOf(guildsCfg.getString(format("guilds.%d.postfix.color", ((playerInfo>>8)&0xFF))).toUpperCase(Locale.ENGLISH)))
-				.append(guildsCfg.getString(format("guilds.%d.postfix.symbol", ((playerInfo>>8)&0xFF))).toUpperCase(Locale.ENGLISH))
-				.append("-" + toRoman(playerInfo&0xFF) + ChatColor.RESET);
-			}
-		} else {
+		// If guilds ID and level isn't equal to 0 AND this guilds exists
+		} else if (guild != 0 && level != 0 && guildsCfg.contains(guild + ".engName")) {
+			newName.append(ChatColor.valueOf(guildsCfg.getString(guild + ".postfix.color").toUpperCase(eng)));
 			
-			// If guilds ID and level isn't equal to 0 AND this guilds exists
-			if ((playerInfo&0xFF00) != 0 && (playerInfo&0xFF) != 0 && guildsCfg.contains(format("guilds.%d.engName", ((playerInfo>>8)&0xFF)))) {
-				newName.append(ChatColor.valueOf(guildsCfg.getString(format("guilds.%d.postfix.color", ((playerInfo>>8)&0xFF))).toUpperCase(Locale.ENGLISH)));
-			}
-			
-			newName.append(player.getName());
-			
-			// If guilds ID and level isn't equal to 0 AND this guilds exists
-			if ((playerInfo&0xFF00) != 0 && (playerInfo&0xFF) != 0 && guildsCfg.contains(format("guilds.%d.engName", ((playerInfo>>8)&0xFF)))) {
-				newName.append(ChatColor.WHITE + " | ")
-				.append(ChatColor.valueOf(guildsCfg.getString(format("guilds.%d.postfix.color", ((playerInfo>>8)&0xFF))).toUpperCase(Locale.ENGLISH)))
-				.append(guildsCfg.getString(format("guilds.%d.postfix.symbol", ((playerInfo>>8)&0xFF))).toUpperCase(Locale.ENGLISH))
-				.append("-" + toRoman(playerInfo&0xFF) + ChatColor.RESET);
-			}
+		}
+		
+		newName.append(player.getName());
+		
+		// If guilds ID and level isn't equal to 0 AND this guilds exists
+		if (guild != 0 && level != 0 && guildsCfg.contains(guild + ".engName")) {
+			newName.append(ChatColor.WHITE + " | ")
+			.append(ChatColor.valueOf(guildsCfg.getString(guild + ".postfix.color").toUpperCase(eng)))
+			.append(guildsCfg.getString(guild + ".postfix.symbol").toUpperCase(eng))
+			.append("-" + toRoman(level) + ChatColor.RESET);
 		}
 		
 		player.setPlayerListName(newName.toString());
+	}
+	
+	public static void checkObjectives() {
+		if (scboard.getObjective("ClanID") == null) scboard.registerNewObjective("ClanID", "dummy");
+		if (scboard.getObjective("Emerald_money") == null) scboard.registerNewObjective("Emerald_money", "dummy");
+		if (scboard.getObjective("ExpBottle") == null) scboard.registerNewObjective("ExpBottle", "dummy");
 	}
 }

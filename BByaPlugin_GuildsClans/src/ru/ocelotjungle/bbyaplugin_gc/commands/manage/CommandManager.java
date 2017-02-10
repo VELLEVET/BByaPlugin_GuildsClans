@@ -16,9 +16,11 @@ import org.bukkit.craftbukkit.v1_11_R1.command.CraftBlockCommandSender;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 
 import ru.ocelotjungle.bbyaplugin_gc.Main;
+import ru.ocelotjungle.bbyaplugin_gc.commands.commands.FullLevelUpCommand;
 import ru.ocelotjungle.bbyaplugin_gc.commands.commands.GetClanCommand;
 import ru.ocelotjungle.bbyaplugin_gc.commands.commands.GetGuildCommand;
 import ru.ocelotjungle.bbyaplugin_gc.commands.commands.GetLevelCommand;
+import ru.ocelotjungle.bbyaplugin_gc.commands.commands.GoToGuildCommand;
 import ru.ocelotjungle.bbyaplugin_gc.commands.commands.HelpCommand;
 import ru.ocelotjungle.bbyaplugin_gc.commands.commands.ReloadCommand;
 import ru.ocelotjungle.bbyaplugin_gc.commands.commands.ResetInfoCommand;
@@ -28,33 +30,35 @@ import ru.ocelotjungle.bbyaplugin_gc.commands.commands.SetLevelCommand;
 
 public class CommandManager implements CommandExecutor {
 	
-	public static final LinkedHashMap<String, CommandInterface> commands = new LinkedHashMap<String, CommandInterface>();
+	public static final LinkedHashMap<String, CommandInterface> COMMANDS = new LinkedHashMap<String, CommandInterface>();
 	ChatColor err = ChatColor.RED;
 	
 	public CommandManager(Main plugin) {
 		plugin.getCommand("bbyaplugingc").setExecutor(this);
 		
-		commands.put("help", new HelpCommand());
-		commands.put("reload", new ReloadCommand());
-		commands.put("setclan", new SetClanCommand());
-		commands.put("getclan", new GetClanCommand());
-		commands.put("setguild", new SetGuildCommand());
-		commands.put("getguild", new GetGuildCommand());
-		commands.put("setlevel", new SetLevelCommand());
-		commands.put("getlevel", new GetLevelCommand());
-		commands.put("resetinfo", new ResetInfoCommand());
+		COMMANDS.put("help", new HelpCommand());
+		COMMANDS.put("reload", new ReloadCommand());
+		COMMANDS.put("setclan", new SetClanCommand());
+		COMMANDS.put("getclan", new GetClanCommand());
+		COMMANDS.put("setguild", new SetGuildCommand());
+		COMMANDS.put("getguild", new GetGuildCommand());
+		COMMANDS.put("setlevel", new SetLevelCommand());
+		COMMANDS.put("getlevel", new GetLevelCommand());
+		COMMANDS.put("gotoguild", new GoToGuildCommand());
+		COMMANDS.put("fulllevelup", new FullLevelUpCommand());
+		COMMANDS.put("resetinfo", new ResetInfoCommand());
 	}
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
-		if (args.length == 0 || !commands.containsKey(args[0])) {
-			commands.get("help").execute(sender, label, args);
+		if (args.length == 0 || !COMMANDS.containsKey(args[0])) {
+			COMMANDS.get("help").execute(sender, label, args);
 			return true;
 			
-		} else if (commands.containsKey(args[0])) {
+		} else if (COMMANDS.containsKey(args[0])) {
 			
-			CommandInterface command = commands.get(args[0]);
+			CommandInterface command = COMMANDS.get(args[0]);
 			
 			if (args.length < command.getArgumentCount()) {
 				sender.sendMessage(err + "Usage: /bp " + command.getUsage());

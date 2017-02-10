@@ -13,23 +13,23 @@ import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 
 public class ReloadCommand implements CommandInterface {
 	
-	private static final int argumentCount = 1;
-	private static final String usage = "reload",
-								description = "reloads configs";
+	private static final int ARGUMENT_COUNT = 1;
+	private static final String USAGE = "reload",
+								DESCRIPTION = "reloads configs";
 	
 	@Override
 	public int getArgumentCount() {
-		return argumentCount;
+		return ARGUMENT_COUNT;
 	}
 	
 	@Override
 	public String getUsage() {
-		return usage;
+		return USAGE;
 	}
 	
 	@Override
 	public String getDescription() {
-		return description;
+		return DESCRIPTION;
 	}
 	
 	@Override

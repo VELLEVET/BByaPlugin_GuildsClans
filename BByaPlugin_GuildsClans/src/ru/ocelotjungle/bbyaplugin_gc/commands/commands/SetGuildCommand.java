@@ -1,49 +1,51 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.guildsCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.saveCfgs;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import net.md_5.bungee.api.ChatColor;
-
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.MemorySection;
-import org.bukkit.configuration.file.FileConfiguration;
 
-import ru.ocelotjungle.bbyaplugin_gc.Configs;
-import ru.ocelotjungle.bbyaplugin_gc.Main;
-import ru.ocelotjungle.bbyaplugin_gc.Utils;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.IncorrectValueException;
 
 public class SetGuildCommand implements CommandInterface {
 	
-	private static final int argumentCount = 3;
-	private static final String usage = "setguild <player> <guild ID/name>",
-								description = "sets player's guild";
+	private static final int ARGUMENT_COUNT = 3;
+	private static final String USAGE = "setguild <player> <guild ID/name>",
+								DESCRIPTION = "sets player's guild";
 	
 	@Override
 	public int getArgumentCount() {
-		return argumentCount;
+		return ARGUMENT_COUNT;
 	}
 	
 	@Override
 	public String getUsage() {
-		return usage;
+		return USAGE;
 	}
 	
 	@Override
 	public String getDescription() {
-		return description;
+		return DESCRIPTION;
 	}
 	
 	@Override
 	public List<String> getTabComplete(String[] args) {
 		List<String> result = new ArrayList<String>();
 		
-		for (String guildId : ((MemorySection) Configs.guildsCfg.get("guilds")).getValues(false).keySet()) {
-			String guildEngName = Configs.guildsCfg.getString("guilds." + guildId + ".engName");
+		args[2] = args[2].toLowerCase();
+		
+		for (String guildId : guildsCfg.getValues(false).keySet()) {
+			String guildEngName = guildsCfg.getString(guildId + ".engName");
 			
-			if (guildEngName.startsWith(args[2])) {
+			if (guildEngName.toLowerCase().startsWith(args[2])) {
 				result.add(guildEngName);
 			}
 		}
@@ -53,26 +55,25 @@ public class SetGuildCommand implements CommandInterface {
 
 	@Override
 	public void execute(CommandSender sender, String label, String[] args) {
-		FileConfiguration guildsCfg = Configs.guildsCfg, playersCfg = Configs.playersCfg;
-		String name = args[1].toLowerCase(), value = args[2];
+		String name = args[1].toLowerCase();
+		int playerInfo = fromHex(playersCfg.getString("players." + name)) & 0xFFFFFF;
 		
 		try {
-			if (Integer.parseInt(value) >= 0 && Integer.parseInt(value) <= 255) {
-				if (Integer.parseInt(value) == 0 || ((MemorySection) guildsCfg.get("guilds")).getValues(false).containsKey(value)) {
-					if (!playersCfg.contains("players." + name)) {
-						playersCfg.set("players." + name, 
-							Utils.toHex(Integer.parseInt(value)<<8));
+			int guild = Integer.parseInt(args[2]);
+			if (guild >= 0 && guild <= 255) {
+				if (guild == 0 || guildsCfg.getValues(false).containsKey(guild + "")) {
+					if (playersCfg.contains("players." + name)) {
+						playersCfg.set("players." + name, toHex(guild<<8 | playerInfo&0xFF00FF));
 						
 					} else {
-						playersCfg.set("players." + name, 
-							Utils.toHex((Integer.parseInt(value)<<8 | Utils.fromHex(playersCfg.getString("players." + name))&0xFF00FF)));
+						playersCfg.set("players." + name, toHex(guild<<8));
 					}
 					
-					sender.sendMessage(Utils.format("You set guild (%s; %s) for player %s.", 
-							guildsCfg.getString("guilds." + args[2] + ".engName"), value, args[1]));
+					sender.sendMessage(format("You set guild (%s; %s) for player %s.", 
+							guildsCfg.getString(args[2] + ".engName"), guild, args[1]));
 					
 				} else {
-					sender.sendMessage(ChatColor.RED + "Guild with ID/Name '" + value + "' doesn't exist.");
+					sender.sendMessage(ChatColor.RED + "Guild with ID '" + guild + "' doesn't exist.");
 				}
 				
 			} else {
@@ -80,31 +81,30 @@ public class SetGuildCommand implements CommandInterface {
 			}
 			
 		} catch (NumberFormatException nfe) {
+			String guildName = args[2];
 			boolean found = false;
-			for (String entry : ((MemorySection) guildsCfg.get("guilds")).getValues(false).keySet()) {
-				if (guildsCfg.getString("guilds." + entry + ".engName").equalsIgnoreCase(value)) {
-					if (!playersCfg.contains("players." + name)) {
-						playersCfg.set("players." + name, 
-							Utils.toHex(Integer.parseInt(entry)<<8));
+			for (String guild : guildsCfg.getValues(false).keySet()) {
+				if (guildsCfg.getString(guild + ".engName").equalsIgnoreCase(guildName)) {
+					if (playersCfg.contains("players." + name)) {
+						playersCfg.set("players." + name, toHex((Byte.parseByte(guild)<<8 | playerInfo&0xFF00FF)));
 						
 					} else {
-						playersCfg.set("players." + name, 
-							Utils.toHex((Integer.parseInt(entry)<<8 | Utils.fromHex(playersCfg.getString("players." + name))&0xFF00FF)));
+						playersCfg.set("players." + name, toHex(Byte.parseByte(guild)<<8));
 					}
 					
-					sender.sendMessage(Utils.format("You set guild (%s; %s) for player %s.", 
-							guildsCfg.getString("guilds." + entry + ".engName"), entry, args[1]));
+					sender.sendMessage(format("You set guild (%s; %s) for player %s.", 
+							guildsCfg.getString(guild + ".engName"), guild, args[1]));
 					found = true;
 					break;
 				}
 			}
 			if (!found) {
-				sender.sendMessage(ChatColor.RED + "Guild with ID/Name '" + value + "' doesn't exist.");
+				sender.sendMessage(ChatColor.RED + "Guild with Name '" + guildName + "' doesn't exist.");
 			}
 		}
 		
-		Configs.saveCfgs();
-		Utils.rebuildPlayerNickname(Main.server.getPlayer(name));
-		Utils.initCfgsToScoreboard();
+		saveCfgs();
+		rebuildPlayerNickname(server.getPlayer(name));
+		initCfgsToScoreboard();
 	}
 }

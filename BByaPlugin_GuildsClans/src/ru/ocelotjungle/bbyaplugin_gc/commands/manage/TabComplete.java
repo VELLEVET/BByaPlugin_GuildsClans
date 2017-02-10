@@ -29,7 +29,7 @@ public class TabComplete implements TabCompleter {
 			if (args.length == 1) {
 				List<String> result = new ArrayList<String>();
 				
-				for (String command : CommandManager.commands.keySet()) {
+				for (String command : CommandManager.COMMANDS.keySet()) {
 					if (command.startsWith(args[0])) {
 						result.add(command);
 					}
@@ -39,13 +39,13 @@ public class TabComplete implements TabCompleter {
 				
 			} else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("resetinfo")) {
-					return CommandManager.commands.get(args[0]).getTabComplete(args);
+					return CommandManager.COMMANDS.get(args[0]).getTabComplete(args);
 				}
 				
 				List<String> result = new ArrayList<String>();
 				
 				for (Player player : Main.server.getOnlinePlayers()) {
-					if (player.getName().startsWith(args[1])) {
+					if (player.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
 						result.add(player.getName());
 					}
 				}
@@ -53,7 +53,7 @@ public class TabComplete implements TabCompleter {
 				return result;
 				
 			} else if (args.length == 3) {
-				List<String> result = CommandManager.commands.get(args[0]).getTabComplete(args);
+				List<String> result = CommandManager.COMMANDS.get(args[0]).getTabComplete(args);
 				return (result == null ? null : result);
 			}
 		} catch (NullPointerException npe) {

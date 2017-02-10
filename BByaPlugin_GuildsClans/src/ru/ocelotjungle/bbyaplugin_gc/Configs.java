@@ -12,12 +12,14 @@ import java.io.IOException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import static ru.ocelotjungle.bbyaplugin_gc.Main.plugin;
+
 public class Configs {
 	
 	public static FileConfiguration mainCfg, playersCfg, clansCfg, guildsCfg;
 	
 	public static void saveCfgs() {
-		try { Configs.playersCfg.save(new File(Main.plugin.getDataFolder(), "players.yml")); }
+		try { playersCfg.save(new File(plugin.getDataFolder(), "players.yml")); }
 		catch (IOException io) { Logger.errF("Cannot save players config to disk. Reason: %s", io.toString()); }
 		
 		// No need to save these cfgs
@@ -32,27 +34,27 @@ public class Configs {
 	}
 	
 	public static void reloadPlayersCfg() {
-		File file = new File(Main.plugin.getDataFolder(), "players.yml");
-		if(!file.exists()) { Main.plugin.saveResource(file.getName(), false); }
-		Configs.playersCfg = YamlConfiguration.loadConfiguration(file);
+		File file = new File(plugin.getDataFolder(), "players.yml");
+		if(!file.exists()) { plugin.saveResource(file.getName(), false); }
+		playersCfg = YamlConfiguration.loadConfiguration(file);
 	}
 	
 	public static void reloadClansCfg() {
-		File file = new File(Main.plugin.getDataFolder(), "clans.yml");
-		if(!file.exists()) { Main.plugin.saveResource(file.getName(), false); }
-		Configs.clansCfg = YamlConfiguration.loadConfiguration(file);
+		File file = new File(plugin.getDataFolder(), "clans.yml");
+		if(!file.exists()) { plugin.saveResource(file.getName(), false); }
+		clansCfg = YamlConfiguration.loadConfiguration(file);
 	}
 	
 	public static void reloadGuildsCfg() {
-		File file = new File(Main.plugin.getDataFolder(), "guilds.yml");
-		if(!file.exists()) { Main.plugin.saveResource(file.getName(), false); }
-		Configs.guildsCfg = YamlConfiguration.loadConfiguration(file);
+		File file = new File(plugin.getDataFolder(), "guilds.yml");
+		if(!file.exists()) { plugin.saveResource(file.getName(), false); }
+		guildsCfg = YamlConfiguration.loadConfiguration(file);
 	}
 	
 	public static void reloadMainCfg() {
-		File file = new File(Main.plugin.getDataFolder(), "config.yml");
-		if(!file.exists()) { Main.plugin.saveResource(file.getName(), false); }
-		Configs.mainCfg = YamlConfiguration.loadConfiguration(file);
+		File file = new File(plugin.getDataFolder(), "config.yml");
+		if(!file.exists()) { plugin.saveResource(file.getName(), false); }
+		mainCfg = YamlConfiguration.loadConfiguration(file);
 	}
 	
 	public static void reloadCfgs() {

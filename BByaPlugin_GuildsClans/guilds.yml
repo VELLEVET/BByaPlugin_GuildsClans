@@ -1,17 +1,21 @@
 # Guild template
-# 1:
+# 1:                 // only numbers, not letters
 #   engName: English name
-#   rusName: RussianName
 #   postfix:
 #     symbol: Guild symbol
 #     color: Guild color
 #   effects:
-#     1:
+#     1:             // only numbers, not letters
 #       morning: Issued only at the morning?
 #       name: Name of effect
-#       level: Level of effect
 #       levels:
-#       - From what guild level it works
-#       - To what guild level it works
+#         1: 0      // is equal to "for all players in guild"
+#         3: maxGuildLevel     // is equal to "from 0 to maxGuildLevel"
+#         7: []     // is equal to "for all players in guild"
+#         12: [minGuildLevel]      // is equal to "for all players in guild from minGuildLevel"
+#         20: [minGuildLevel, maxGuildLevel]       // is equal to "from minGuildLevel to maxGuildLevel"
+#         25:      // is equal to the last, but the last is more preferred
+#           - minGuildLevel
+#           - maxGuildLevel
 
-guilds: {}
+start here

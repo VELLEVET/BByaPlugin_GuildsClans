@@ -4,29 +4,30 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import ru.ocelotjungle.bbyaplugin_gc.Configs;
-import ru.ocelotjungle.bbyaplugin_gc.Utils;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.format;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 
 public class GetLevelCommand implements CommandInterface {
 	
-	private static final int argumentCount = 2;
-	private static final String usage = "getlevel <player>",
-								description = "returns player's guild level";
+	private static final int ARGUMENT_COUNT = 2;
+	private static final String USAGE = "getlevel <player>",
+								DESCRIPTION = "returns player's guild level";
 	
 	@Override
 	public int getArgumentCount() {
-		return argumentCount;
+		return ARGUMENT_COUNT;
 	}
 	
 	@Override
 	public String getUsage() {
-		return usage;
+		return USAGE;
 	}
 	
 	@Override
 	public String getDescription() {
-		return description;
+		return DESCRIPTION;
 	}
 	
 	@Override
@@ -38,8 +39,8 @@ public class GetLevelCommand implements CommandInterface {
 	public void execute(CommandSender sender, String label, String[] args) {
 		String name = args[1].toLowerCase();
 		
-		sender.sendMessage(Utils.format("%s's guild level is %s.",
-			args[1], Utils.fromHex(Configs.playersCfg.getString("players." + name))&0xFF));
+		sender.sendMessage(format("%s's guild level is %s.",
+			args[1], fromHex(playersCfg.getString("players." + name))&0xFF));
 	}
 
 }
