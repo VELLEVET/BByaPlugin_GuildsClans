@@ -9,12 +9,12 @@
 #       morning: Issued only at the morning?
 #       name: Name of effect
 #       levels:
-#         1: 0      // is equal to "for all players in guild"
-#         3: maxGuildLevel     // is equal to "from 0 to maxGuildLevel"
-#         7: []     // is equal to "for all players in guild"
-#         12: [minGuildLevel]      // is equal to "for all players in guild from minGuildLevel"
-#         20: [minGuildLevel, maxGuildLevel]       // is equal to "from minGuildLevel to maxGuildLevel"
-#         25:      // is equal to the last, but the last is more preferred
+#         1: 0      							// is equal to "for all players in guild"
+#         3: maxGuildLevel     					// is equal to "from 0 to maxGuildLevel"
+#         7: []    								// is equal to "for all players in guild"
+#         12: [minGuildLevel]      				// is equal to "for all players in guild from minGuildLevel"
+#         20: [minGuildLevel, maxGuildLevel]	// is equal to "from minGuildLevel to maxGuildLevel"
+#         25:      								// is equal to the last, but the last is more preferred
 #           - minGuildLevel
 #           - maxGuildLevel
 

@@ -69,10 +69,10 @@ public class EffectScheduler implements Runnable {
 							PotionEffect playerPotionEffect = player.getPotionEffect(effectEntry.getValue().getType());
 							
 							// If player haven't this effect OR
-							// player's effect have now only <24000 ticks OR
+							// player's effect have now only <1200 ticks OR
 							// player's effect have less level
 							if( playerPotionEffect == null ||
-								playerPotionEffect.getDuration() < 24000 || 
+								playerPotionEffect.getDuration() < 1200 || 
 								playerPotionEffect.getAmplifier() < effectEntry.getValue().getAmplifier()) {
 								
 								player.removePotionEffect(effectEntry.getValue().getType());

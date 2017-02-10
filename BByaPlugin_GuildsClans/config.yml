@@ -7,5 +7,5 @@ effectDuration: 72000
 # Does step affects money cost of new level (default: false)
 stepAffectsMoney: false
 
-#Does step affects experience bottle cost of new level (default: true)
+# Does step affects experience bottle cost of new level (default: true)
 stepAffectsBottles: true
