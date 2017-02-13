@@ -109,7 +109,6 @@ public class SetClanCommand implements CommandInterface {
 		}
 		
 		saveCfgs();
-		rebuildPlayerNickname(server.getPlayer(name));
-		initCfgsToScoreboard();
+		initCfgsToScoreboard(server.getPlayer(name), true);
 	}
 }

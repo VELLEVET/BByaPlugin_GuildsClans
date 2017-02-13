@@ -7,7 +7,6 @@ import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.format;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.initCfgsToScoreboard;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.rebuildPlayerNickname;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.toHex;
 
 import java.util.ArrayList;
@@ -72,8 +71,7 @@ public class SetLevelCommand implements CommandInterface {
 			sender.sendMessage(format("You set guild level of player %s to %d.", args[1], value));
 			
 			saveCfgs();
-			rebuildPlayerNickname(server.getPlayer(name));
-			initCfgsToScoreboard();
+			initCfgsToScoreboard(server.getPlayer(name), true);
 
 		} else {
 			throw new IncorrectValueException(format("You can set only values from 0 to %d.", maxLevel));

@@ -5,10 +5,12 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import ru.ocelotjungle.bbyaplugin_gc.Configs;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.reloadCfgs;
 import ru.ocelotjungle.bbyaplugin_gc.Main;
 import ru.ocelotjungle.bbyaplugin_gc.EffectScheduler;
-import ru.ocelotjungle.bbyaplugin_gc.Utils;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.initCfgsToScoreboard;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.initEffects;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.rebuildPlayerNickname;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 
 public class ReloadCommand implements CommandInterface {
@@ -40,14 +42,14 @@ public class ReloadCommand implements CommandInterface {
 	@Override
 	public void execute(CommandSender sender, String label, String[] args) {
 		
-		Configs.reloadCfgs();
-		Utils.initCfgsToScoreboard();
-		Utils.initEffects();
+		reloadCfgs();
+		initCfgsToScoreboard();
+		initEffects();
 		
 		new EffectScheduler(Main.plugin);
 		
 		for (Player player : Main.server.getOnlinePlayers()) {
-			Utils.rebuildPlayerNickname(player);
+			rebuildPlayerNickname(player);
 		}
 		
 		sender.sendMessage("BByaPlugin_GuildsClans configs reloaded.");

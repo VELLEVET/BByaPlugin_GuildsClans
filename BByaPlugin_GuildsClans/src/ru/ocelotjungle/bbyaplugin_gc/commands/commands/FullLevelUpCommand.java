@@ -3,15 +3,14 @@ package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.guildsCfg;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.mainCfg;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.saveCfgs;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.reloadGuildsCfg;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.reloadPlayersCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.saveCfgs;
 import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
 import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.format;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.initCfgsToScoreboard;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.rebuildPlayerNickname;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.toHex;
 
 import java.util.List;
@@ -105,7 +104,6 @@ public class FullLevelUpCommand implements CommandInterface {
 		playersCfg.set("players." + name, toHex(playerInfo&0xFFFF00 | newLevel));
 		
 		saveCfgs();
-		rebuildPlayerNickname(server.getPlayer(name));
-		initCfgsToScoreboard();
+		initCfgsToScoreboard(server.getPlayer(name), true);
 	}
 }

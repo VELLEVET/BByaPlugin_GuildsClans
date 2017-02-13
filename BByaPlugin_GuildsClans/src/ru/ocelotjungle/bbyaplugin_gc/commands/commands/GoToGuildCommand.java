@@ -3,12 +3,11 @@ package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.guildsCfg;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.saveCfgs;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
 import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.format;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.initCfgsToScoreboard;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.rebuildPlayerNickname;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.toHex;
 
 import java.util.ArrayList;
@@ -136,9 +135,7 @@ public class GoToGuildCommand implements CommandInterface {
 		}
 		
 		saveCfgs();
-		rebuildPlayerNickname(server.getPlayer(name));
-		initCfgsToScoreboard();
-
+		initCfgsToScoreboard(server.getPlayer(name), true);
 	}
 
 }

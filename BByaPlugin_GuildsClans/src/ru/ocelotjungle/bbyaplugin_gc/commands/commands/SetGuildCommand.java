@@ -104,7 +104,6 @@ public class SetGuildCommand implements CommandInterface {
 		}
 		
 		saveCfgs();
-		rebuildPlayerNickname(server.getPlayer(name));
-		initCfgsToScoreboard();
+		initCfgsToScoreboard(server.getPlayer(name), true);
 	}
 }
