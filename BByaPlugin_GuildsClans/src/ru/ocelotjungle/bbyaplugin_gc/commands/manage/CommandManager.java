@@ -99,7 +99,7 @@ public class CommandManager implements CommandExecutor {
 					
 				} catch (NullPointerException npe) {
 					sender.sendMessage(err + "Some NullPointerException, please contact OcelotJungle!");
-					//npe.printStackTrace();
+					npe.printStackTrace();
 					
 				} catch (Exception e) {
 					sender.sendMessage(err + "Some exception (" + e.getMessage() + "), please contact OcelotJungle!");

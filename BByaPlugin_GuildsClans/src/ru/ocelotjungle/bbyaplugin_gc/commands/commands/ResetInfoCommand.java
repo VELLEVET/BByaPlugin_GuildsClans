@@ -68,6 +68,7 @@ public class ResetInfoCommand implements CommandInterface {
 		}
 		
 		scboard.getObjective("ClanID").getScore(name).setScore(0);
+		
 		for (Entry<String, Object> entry2 : guildsCfg.getValues(false).entrySet()) {
 			scboard.getObjective(format("T_%s", guildsCfg.getString(entry2.getKey() + ".engName")))
 					.getScore(name).setScore(0);

@@ -16,6 +16,7 @@ import java.util.Locale;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import ru.ocelotjungle.bbyaplugin_gc.Logger;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.IncorrectValueException;
 
@@ -60,20 +61,27 @@ public class SetLevelCommand implements CommandInterface {
 	@Override
 	public void execute(CommandSender sender, String label, String[] args) {
 		String name = args[1].toLowerCase(Locale.ENGLISH);
-
-		int playerInfo = fromHex(playersCfg.getString("players." + name)) & 0xFFFFFF,
-			value = Integer.parseInt("0" + args[2].replaceAll("[^0-9]", "")),
-			maxLevel = guildsCfg.contains(((playerInfo>>1*8)&0xFF) + ".maxLevel")?
-							guildsCfg.getInt(((playerInfo>>1*8)&0xFF) + ".maxLevel") : 255;
 		
-		if (value >= 0 && value <= maxLevel) {
+		int playerInfo = fromHex(playersCfg.getString("players." + name)) & 0xFFFFFF,
+			maxLevel = guildsCfg.contains(((playerInfo>>1*8)&0xFF) + ".maxLevel")?
+						guildsCfg.getInt(((playerInfo>>1*8)&0xFF) + ".maxLevel") : 255;
+						
+		try {
+			short value = Short.parseShort("0" + args[2].replaceAll("[^0-9]", ""));
+			
+			if (value < 0 || value > maxLevel) {
+				throw new NumberFormatException();
+			}
+		
 			playersCfg.set("players." + name, toHex(playerInfo&0xFFFF00 | value));
 			sender.sendMessage(format("You set guild level of player %s to %d.", args[1], value));
 			
 			saveCfgs();
 			initCfgsToScoreboard(server.getPlayer(name), true);
 
-		} else {
+		} catch (NumberFormatException nfe) {
+			
+			Logger.err(nfe.getMessage());
 			throw new IncorrectValueException(format("You can set only values from 0 to %d.", maxLevel));
 		}
 	}

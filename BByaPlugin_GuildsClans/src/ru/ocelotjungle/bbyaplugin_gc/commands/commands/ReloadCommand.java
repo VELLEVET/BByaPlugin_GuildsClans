@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.reloadCfgs;
 import ru.ocelotjungle.bbyaplugin_gc.Main;
 import ru.ocelotjungle.bbyaplugin_gc.EffectScheduler;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.checkObjectives;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.initCfgsToScoreboard;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.initEffects;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.rebuildPlayerNickname;
@@ -43,6 +44,7 @@ public class ReloadCommand implements CommandInterface {
 	public void execute(CommandSender sender, String label, String[] args) {
 		
 		reloadCfgs();
+		checkObjectives();
 		initCfgsToScoreboard();
 		initEffects();
 		

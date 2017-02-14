@@ -8,8 +8,8 @@ package ru.ocelotjungle.bbyaplugin_gc;
 
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.clansCfg;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.guildsCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.mainCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.reloadCfgs;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.reloadPlayersCfg;
 import static ru.ocelotjungle.bbyaplugin_gc.Logger.errF;
@@ -222,6 +222,11 @@ public abstract class Utils {
 				Logger.err(format("There's incorrect value of guild number (%s).", guild));
 				continue;
 			}
+			
+			if (!guildsCfg.contains(guild + ".effects")) {
+				continue;
+			}
+			
 			for(String effectNumber : ((MemorySection) guildsCfg.get(guild + ".effects")).getValues(false).keySet()) {
 				try { Short.parseShort(effectNumber); } 
 				catch (NumberFormatException nfe) {
@@ -325,5 +330,13 @@ public abstract class Utils {
 		if (scboard.getObjective("ClanID") == null) scboard.registerNewObjective("ClanID", "dummy");
 		if (scboard.getObjective("Emerald_money") == null) scboard.registerNewObjective("Emerald_money", "dummy");
 		if (scboard.getObjective("ExpBottle") == null) scboard.registerNewObjective("ExpBottle", "dummy");
+
+		for (String guild : guildsCfg.getValues(false).keySet()) {
+			String objectiveName = "T_" + guildsCfg.getString(guild + ".engName");
+			
+			if (scboard.getObjective(objectiveName) == null) {
+				scboard.registerNewObjective(objectiveName, "dummy");
+			}
+		}
 	}
 }

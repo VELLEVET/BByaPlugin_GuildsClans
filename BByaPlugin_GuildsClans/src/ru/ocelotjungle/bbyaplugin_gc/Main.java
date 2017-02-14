@@ -9,6 +9,7 @@ package ru.ocelotjungle.bbyaplugin_gc;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.checkObjectives;
 
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -23,17 +24,21 @@ public class Main extends JavaPlugin {
 	public static Scoreboard scboard;
 	public static Main plugin;
 	public static LinkedHashMap<Long, PotionEffect> effectList;
+	
+	public Main() {
+		getLogger().setLevel(Level.OFF);
+	}
 
-	public void onEnable() {
+	public void onEnable() {		
 		server = getServer();
 		scboard = getServer().getScoreboardManager().getMainScoreboard();
 		plugin = this;
-		
+
+		Configs.reloadCfgs();
 		checkObjectives();
 
 		scboard.resetScores("@p");
-
-		Configs.reloadCfgs();
+		
 		Utils.initEffects();
 		Utils.initCfgsToScoreboard();
 
