@@ -6,3 +6,6 @@ To set up this project to your Eclipse, do next:
 2. Create new Java Project in your Eclipse.
 3. Add last spigot jar file to your Eclipse project as External JAR.
 4. Copy folder src/ru to project's src/ folder, then copy .yml files to project's catalogue.
+
+You can write the detailed guide (only in russian variant) here:
+https://forum.bbyaworld.com/index.php?/topic/646-bbgc/&do=findComment&comment=45924
