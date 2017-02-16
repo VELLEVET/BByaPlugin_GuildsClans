@@ -109,6 +109,8 @@ public abstract class Utils {
 	
 	public static void initCfgsToScoreboard(Player player, boolean isRebuildNeeded) {
 		
+		if (player == null) return;
+		
 		reloadCfgs();
 		
 		if(!playersCfg.contains("players") || ((MemorySection) playersCfg.get("players")).getValues(false).size() == 0) {
@@ -122,8 +124,8 @@ public abstract class Utils {
 			guildId = (playerInfo>>1*8)&0xFF,
 			level = playerInfo&0xFF;
 		
-		for (Entry<String, Object> guild : guildsCfg.getValues(false).entrySet()) {
-			String objectiveName = format("T_%s", guildsCfg.getString(guild.getKey() + ".engName"));
+		for (String guild : guildsCfg.getValues(false).keySet()) {
+			String objectiveName = "T_%s" + guildsCfg.getString(guild + ".engName");
 			
 			if (scboard.getObjective(objectiveName) == null) {
 				scboard.registerNewObjective(objectiveName, "dummy");
@@ -327,16 +329,19 @@ public abstract class Utils {
 	}
 	
 	public static void checkObjectives() {
-		if (scboard.getObjective("ClanID") == null) scboard.registerNewObjective("ClanID", "dummy");
 		if (scboard.getObjective("Emerald_money") == null) scboard.registerNewObjective("Emerald_money", "dummy");
 		if (scboard.getObjective("ExpBottle") == null) scboard.registerNewObjective("ExpBottle", "dummy");
+		
+		if (scboard.getObjective("ClanID") != null) scboard.getObjective("ClanID").unregister();
+		scboard.registerNewObjective("ClanID", "dummy");
 
 		for (String guild : guildsCfg.getValues(false).keySet()) {
 			String objectiveName = "T_" + guildsCfg.getString(guild + ".engName");
 			
-			if (scboard.getObjective(objectiveName) == null) {
-				scboard.registerNewObjective(objectiveName, "dummy");
+			if (scboard.getObjective(objectiveName) != null) {
+				scboard.getObjective(objectiveName).unregister();
 			}
+			scboard.registerNewObjective(objectiveName, "dummy");
 		}
 	}
 }
