@@ -8,4 +8,8 @@ To set up this project to your Eclipse, do next:
 4. Copy folder src/ru to project's src/ folder, then copy .yml files to project's catalogue.
 
 You can write the detailed guide (only in russian variant) here:
+<<<<<<< HEAD
 https://forum.bbyaworld.com/index.php?/topic/646-bbgc/&do=findComment&comment=45924
+=======
+https://forum.bbyaworld.com/index.php?/topic/646-bbgc/&do=findComment&comment=45924
+>>>>>>> 215f0b5745fb44e31d67b5d73172d16d79da3151
