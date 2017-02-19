@@ -40,7 +40,7 @@ public class Main extends JavaPlugin {
 		scboard.resetScores("@p");
 		
 		Utils.initEffects();
-		Utils.initCfgsToScoreboard();
+		Utils.initCfgsToScoreboard(true);
 
 		new CommandManager(this);
 		new TabComplete(this);

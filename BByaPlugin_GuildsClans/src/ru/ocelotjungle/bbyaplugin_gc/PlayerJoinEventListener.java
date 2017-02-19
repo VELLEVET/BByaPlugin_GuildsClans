@@ -18,7 +18,7 @@ public class PlayerJoinEventListener implements Listener {
 
 	@EventHandler
 	public boolean onPlayerJoined(PlayerJoinEvent evt) {
-		Utils.rebuildPlayerNickname(evt.getPlayer());
+		Utils.initCfgsToScoreboard(evt.getPlayer(), true);
 		return true;
 	}
 }

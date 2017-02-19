@@ -16,6 +16,7 @@ import static ru.ocelotjungle.bbyaplugin_gc.Logger.errF;
 import static ru.ocelotjungle.bbyaplugin_gc.Logger.log;
 import static ru.ocelotjungle.bbyaplugin_gc.Main.effectList;
 import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -118,27 +119,28 @@ public abstract class Utils {
 			return;
 		}
 		
-		String name = player.getName().toLowerCase();
+		String name = player.getName().toLowerCase(),
+				fullName = player.getName();
 		int playerInfo = fromHex(playersCfg.getString("players." + name)),
 			clanId = (playerInfo>>2*8)&0xFF,
 			guildId = (playerInfo>>1*8)&0xFF,
 			level = playerInfo&0xFF;
 		
 		for (String guild : guildsCfg.getValues(false).keySet()) {
-			String objectiveName = "T_%s" + guildsCfg.getString(guild + ".engName");
+			String objectiveName = "T_" + guildsCfg.getString(guild + ".engName");
 			
 			if (scboard.getObjective(objectiveName) == null) {
 				scboard.registerNewObjective(objectiveName, "dummy");
 			}
 			
-			scboard.getObjective(objectiveName).getScore(name).setScore(0);
+			scboard.getObjective(objectiveName).getScore(fullName).setScore(0);
 		}
 		
 		// If player is a member of any guild, which is in the config
 		if (guildId != 0) {
 			if (guildsCfg.contains(guildId + "")) {
-				scboard.getObjective(format("T_%s", guildsCfg.getString(guildId + ".engName")))
-						.getScore(name).setScore(level);
+				scboard.getObjective("T_" + guildsCfg.getString(guildId + ".engName"))
+						.getScore(fullName).setScore(level);
 				
 			} else {
 				errF("There's no guild with this ID (%s; %d)", name, guildId);
@@ -149,7 +151,7 @@ public abstract class Utils {
 		// If player is a member of any clan, which is in the config
 		if (clanId != 0) {
 			if (clansCfg.contains(clanId + "")) {
-				scboard.getObjective("ClanID").getScore(name).setScore(clanId);
+				scboard.getObjective("ClanID").getScore(fullName).setScore(clanId);
 				
 			} else {
 				errF("There's no clan with this ID (%s; %d)", name, clanId);
@@ -158,6 +160,19 @@ public abstract class Utils {
 		
 		if (isRebuildNeeded) {
 			rebuildPlayerNickname(player);
+		}
+	}
+	
+	public static void initCfgsToScoreboard(boolean isOnlinePlayers) {
+		
+		checkObjectives();
+		
+		if (isOnlinePlayers) {
+			for (Player player : server.getOnlinePlayers()) {
+				initCfgsToScoreboard(player, true);
+			}
+		} else {
+			initCfgsToScoreboard();
 		}
 	}
 	
@@ -172,7 +187,8 @@ public abstract class Utils {
 		
 		for (Map.Entry<String, Object> player : ((MemorySection) playersCfg.get("players")).getValues(false).entrySet()) {
 			
-			String name = player.getKey().toLowerCase(Locale.ENGLISH);
+			String name = player.getKey().toLowerCase(Locale.ENGLISH),
+					fullName = server.getPlayer(name)!=null ? server.getPlayer(name).getName() : name;
 			int playerInfo = fromHex(player.getValue().toString()),
 				clanId = (playerInfo>>2*8)&0xFF,
 				guildId = (playerInfo>>1*8)&0xFF,
@@ -186,14 +202,14 @@ public abstract class Utils {
 				if (scboard.getObjective(objectiveName) == null) {
 					scboard.registerNewObjective(objectiveName, "dummy");
 				}
-				scboard.getObjective(objectiveName).getScore(name).setScore(0);
+				scboard.getObjective(objectiveName).getScore(fullName).setScore(0);
 			}
 			
 			// If player is a member of any guild, which is in the config
 			if (guildId != 0) {
 				if (guildsCfg.contains(guildId + "")) {
 					scboard.getObjective(format("T_%s", guildsCfg.getString(guildId + ".engName")))
-							.getScore(name).setScore(level);
+							.getScore(fullName).setScore(level);
 					
 				} else {
 					errF("There's no guild with this ID (%s; %d)", name, guildId);
@@ -204,7 +220,7 @@ public abstract class Utils {
 			// If player is a member of any clan, which is in the config
 			if (clanId != 0) {
 				if (clansCfg.contains(clanId + "")) {
-					scboard.getObjective("ClanID").getScore(name).setScore(clanId);
+					scboard.getObjective("ClanID").getScore(fullName).setScore(clanId);
 					
 				} else {
 					errF("There's no clan with this ID (%s; %d)", name, clanId);

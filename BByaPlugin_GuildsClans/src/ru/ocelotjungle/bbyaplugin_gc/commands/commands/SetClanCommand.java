@@ -1,17 +1,20 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.clansCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.saveCfgs;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.format;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.initCfgsToScoreboard;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.toHex;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.saveCfgs;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.clansCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.IncorrectValueException;
 
@@ -72,8 +75,6 @@ public class SetClanCommand implements CommandInterface {
 					sender.sendMessage(format("You set clan (%s; %s) for player %s.", 
 							clansCfg.getString(clan + ".label"), clan, args[1]));
 					
-					scboard.getObjective("ClanID").getScore(name).setScore(clan);
-					
 				} else {
 					sender.sendMessage(ChatColor.RED + "Clan with ID '" + clan + "' doesn't exist.");
 				}
@@ -96,8 +97,6 @@ public class SetClanCommand implements CommandInterface {
 					}
 					sender.sendMessage(format("You set clan (%s; %s) for player %s.", 
 							clansCfg.getString(clan + ".label"), clan, args[1]));
-					
-					scboard.getObjective("ClanID").getScore(name).setScore(Integer.parseInt(clan));
 					
 					found = true;
 					break;
