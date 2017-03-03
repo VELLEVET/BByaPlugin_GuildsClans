@@ -46,7 +46,7 @@ public class ReloadCommand implements CommandInterface {
 		checkObjectives();
 		initCfgsToScoreboard(true);
 		initEffects();
-		
+
 		new EffectScheduler(Main.plugin);
 		
 		sender.sendMessage("BByaPlugin_GuildsClans configs reloaded.");

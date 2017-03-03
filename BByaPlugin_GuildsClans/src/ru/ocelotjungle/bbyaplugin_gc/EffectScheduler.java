@@ -24,9 +24,9 @@ public class EffectScheduler implements Runnable {
 
 	private static final World WORLD = server.getWorld("world");
 	private static boolean morning = false;
-
+	
 	public EffectScheduler(Main plugin) {
-		server.getScheduler().cancelAllTasks();
+		server.getScheduler().cancelTasks(plugin);
 		server.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L,
 				Long.parseLong(mainCfg.getString("frequency").replaceAll("[^0-9]", "")));
 	}
@@ -43,13 +43,16 @@ public class EffectScheduler implements Runnable {
 		}
 		
 		for (Player player : Main.server.getOnlinePlayers()) {
+			Utils.initCfgsToScoreboard(player, true);
+			
 			for (Entry<Long, PotionEffect> effectEntry : effectList.entrySet()) {
 				short effectInfo[] = {
-						(short) ((effectEntry.getKey() >> 5*8) & 0xFF), // 0: Is morning
-						(short) ((effectEntry.getKey() >> 4*8) & 0xFF), // 1: Guild ID
-						(short) ((effectEntry.getKey() >> 2*8) & 0xFF), // 2: Effect level
-						(short) ((effectEntry.getKey() >> 1*8) & 0xFF), // 3: Min guild level
-						(short) (effectEntry.getKey() & 0xFF)}; 		// 4: Max guild level
+						(short) ((effectEntry.getKey() >> 6*8) & 0xFF), // 0: Is morning
+						(short) ((effectEntry.getKey() >> 5*8) & 0xFF), // 1: Guild ID
+						(short) ((effectEntry.getKey() >> 3*8) & 0xFF), // 2: Effect level
+						(short) ((effectEntry.getKey() >> 2*8) & 0xFF), // 3: Min guild level
+						(short) ((effectEntry.getKey() >> 1*8) & 0xFF),	// 4: Max guild level
+						(short) ((effectEntry.getKey() >> 0*8) & 0xFF)};// 5: Has safe morning regive
 				
 				// If (effect must be issued at the morning AND it's morning now)
 				// OR effect must be issued everytime
@@ -69,10 +72,10 @@ public class EffectScheduler implements Runnable {
 							PotionEffect playerPotionEffect = player.getPotionEffect(effectEntry.getValue().getType());
 							
 							// If player haven't this effect OR
-							// player's effect have now only <1200 ticks OR
+							// player's effect have now only <=24000 ticks (20m = 1 game day) OR
 							// player's effect have less level
 							if( playerPotionEffect == null ||
-								playerPotionEffect.getDuration() < 1200 || 
+								(playerPotionEffect.getDuration() <= 24000 && effectInfo[5] == 1) || 
 								playerPotionEffect.getAmplifier() < effectEntry.getValue().getAmplifier()) {
 								
 								player.removePotionEffect(effectEntry.getValue().getType());

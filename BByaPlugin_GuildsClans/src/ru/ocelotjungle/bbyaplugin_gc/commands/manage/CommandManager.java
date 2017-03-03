@@ -61,7 +61,7 @@ public class CommandManager implements CommandExecutor {
 			CommandInterface command = COMMANDS.get(args[0]);
 			
 			if (args.length < command.getArgumentCount()) {
-				sender.sendMessage(err + "Usage: /bp " + command.getUsage());
+				sender.sendMessage(err + "Usage: /" + label + " " + command.getUsage());
 				return true;
 			}
 			

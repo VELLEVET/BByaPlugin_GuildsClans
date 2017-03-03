@@ -54,8 +54,8 @@ public abstract class Utils {
 		WEAKNESS(PotionEffectType.WEAKNESS),
 		POISON(PotionEffectType.POISON),
 		WITHER(PotionEffectType.WITHER),
-		HEALTH_BOOST(PotionEffectType.HEALTH_BOOST),
-		ABSORPTION(PotionEffectType.ABSORPTION),
+		HEALTH_BOOST(PotionEffectType.HEALTH_BOOST, true),
+		ABSORPTION(PotionEffectType.ABSORPTION, true),
 		SATURATION(PotionEffectType.SATURATION),
 		GLOWING(PotionEffectType.GLOWING),
 		LEVITATION(PotionEffectType.LEVITATION),
@@ -63,9 +63,15 @@ public abstract class Utils {
 		UNLUCK(PotionEffectType.UNLUCK);
 		
 		private final PotionEffectType spigotPotionEffectType;
-		
+		private final boolean isSafeMorningRegiveNeeded;
+
 		private EffectType(PotionEffectType type) {
+			this(type, false);
+		}
+		
+		private EffectType(PotionEffectType type, boolean saveRegive) {
 			this.spigotPotionEffectType = type;
+			this.isSafeMorningRegiveNeeded = saveRegive;
 		}
 		
 		public static PotionEffectType getByName(String name) {
@@ -75,6 +81,10 @@ public abstract class Utils {
 				Logger.err("There is no effect with name " + name + ", used Glowing.");
 				return PotionEffectType.GLOWING;
 			}
+		}
+		
+		public boolean getSafeMorningRegive() {
+			return isSafeMorningRegiveNeeded;
 		}
 		
 		public PotionEffectType getEffectType() {
@@ -149,13 +159,11 @@ public abstract class Utils {
 		
 		
 		// If player is a member of any clan, which is in the config
-		if (clanId != 0) {
-			if (clansCfg.contains(clanId + "")) {
-				scboard.getObjective("ClanID").getScore(fullName).setScore(clanId);
-				
-			} else {
-				errF("There's no clan with this ID (%s; %d)", name, clanId);
-			}
+		if (clanId == 0 || clansCfg.contains(clanId + "")) {
+			scboard.getObjective("ClanID").getScore(fullName).setScore(clanId);
+			
+		} else {
+			errF("There's no clan with this ID (%s; %d)", name, clanId);
 		}
 		
 		if (isRebuildNeeded) {
@@ -280,15 +288,16 @@ public abstract class Utils {
 						}
 						
 						effectList.put(
-								(((effectInfo.getBoolean("morning")?0x02L:0x01L) << 5*8) | 	// Is it morning effect or no
-								(Long.parseLong(guild) << 4*8) | 			// Guild ID
-								(Long.parseLong(effectNumber) << 3*8) |		// Effect ID
-								(Long.parseLong(effect.getKey()) << 2*8) |	// Effect level
-								(minLevel << 1*8) |							// Min guild level
-								(maxLevel)),								// Max guild level
+								(((effectInfo.getBoolean("morning")?0x02L:0x01L) << 6*8) | 	// Is it morning effect or no
+								(Long.parseLong(guild) << 5*8) | 			// Guild ID
+								(Long.parseLong(effectNumber) << 4*8) |		// Effect ID
+								(Long.parseLong(effect.getKey()) << 3*8) |	// Effect level
+								(minLevel << 2*8) |							// Min guild level
+								(maxLevel << 1*8) |							// Max guild level
+								(EffectType.valueOf(effectInfo.getString("name").toUpperCase()).getSafeMorningRegive() ? 0x01L : 0x00L)),
 								
 								new PotionEffect(
-								(EffectType.getByName(effectInfo.getString("name"))), 
+								(EffectType.getByName(effectInfo.getString("name").toUpperCase())), 
 								mainCfg.getInt("effectDuration"),
 								Integer.parseInt(effect.getKey()) - 1, true, false));
 					}
@@ -314,27 +323,36 @@ public abstract class Utils {
 		
 		StringBuilder newName = new StringBuilder();
 		
+		boolean hasClan = clan != 0 && clansCfg.contains(clan + ".label"),
+				hasGuild = guild != 0 && level != 0 && guildsCfg.contains(guild + ".engName"),
+				hasTeam = scboard.getEntryTeam(player.getName()) != null;
+		
 		// If player is a member of any clan AND this clan exists
-		if (clan != 0 && clansCfg.contains(clan + ".label")) {
+		if (hasClan) {
 			newName.append(ChatColor.valueOf(clansCfg.getString(clan + ".color").toUpperCase(eng)))
 			.append(format("[%s] ", clansCfg.getString(clan + ".label")))
 			.append(ChatColor.RESET);
 		}
 		
 		// If player have any Scoreboard team
-		if (scboard.getEntryTeam(player.getName()) != null) {
+		if (hasTeam) {
 			newName.append(Main.scboard.getEntryTeam(player.getName()).getPrefix());
 			
-		// If guilds ID and level isn't equal to 0 AND this guilds exists
-		} else if (guild != 0 && level != 0 && guildsCfg.contains(guild + ".engName")) {
+		// If guild ID and level isn't equal to 0 AND this guild exists
+		} else if (hasGuild) {
 			newName.append(ChatColor.valueOf(guildsCfg.getString(guild + ".postfix.color").toUpperCase(eng)));
 			
 		}
 		
 		newName.append(player.getName());
 		
-		// If guilds ID and level isn't equal to 0 AND this guilds exists
-		if (guild != 0 && level != 0 && guildsCfg.contains(guild + ".engName")) {
+		// If player have any Scoreboard team
+		if (hasTeam) {
+			newName.append(Main.scboard.getEntryTeam(player.getName()).getSuffix());
+		}
+		
+		// If guild ID and level isn't equal to 0 AND this guild exists
+		if (hasGuild) {
 			newName.append(ChatColor.WHITE + " | ")
 			.append(ChatColor.valueOf(guildsCfg.getString(guild + ".postfix.color").toUpperCase(eng)))
 			.append(guildsCfg.getString(guild + ".postfix.symbol").toUpperCase(eng))
