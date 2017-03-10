@@ -1,5 +1,10 @@
 package ru.ocelotjungle.bbyaplugin_gc;
 
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.mainCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.effectList;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
+
 /*******************************************
  *                                         *
  *    Effect issue to players in guilds    *
@@ -7,11 +12,7 @@ package ru.ocelotjungle.bbyaplugin_gc;
  *******************************************/
 
 import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.effectList;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.mainCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
 
 import java.util.Locale;
 import java.util.Map.Entry;
@@ -24,27 +25,27 @@ public class EffectScheduler implements Runnable {
 
 	private static final World WORLD = server.getWorld("world");
 	private static boolean morning = false;
+	private static long frequency = Long.parseLong(mainCfg.getString("frequency").replaceAll("[^0-9]", ""));
 	
 	public EffectScheduler(Main plugin) {
 		server.getScheduler().cancelTasks(plugin);
-		server.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L,
-				Long.parseLong(mainCfg.getString("frequency").replaceAll("[^0-9]", "")));
+		server.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, frequency);
 	}
 
 	public void run() {
 		
 		// If morning=false AND it's morning now
-		if (!morning && (WORLD.getTime() >= 0) && (WORLD.getTime() <= 200)) {
+		if (!morning && (WORLD.getTime() >= 0) && (WORLD.getTime() <= frequency*2)) {
 			morning = true;
 
 			// If morning=false AND it isn't morning now
-		} else if (morning && (WORLD.getTime() > 200)) {
+		} else if (morning && (WORLD.getTime() > frequency*2)) {
 			morning = false;
 		}
 		
 		for (Player player : Main.server.getOnlinePlayers()) {
 			Utils.initCfgsToScoreboard(player, true);
-			
+
 			for (Entry<Long, PotionEffect> effectEntry : effectList.entrySet()) {
 				short effectInfo[] = {
 						(short) ((effectEntry.getKey() >> 6*8) & 0xFF), // 0: Is morning
@@ -60,9 +61,9 @@ public class EffectScheduler implements Runnable {
 
 					String name = player.getName().toLowerCase(Locale.ENGLISH);
 					int playerInfo = fromHex(playersCfg.getString("players." + name));
-
+					
 					// If effect's guild = player's guild AND EventCheck = 0
-					if ((((playerInfo >> 1 * 8) & 0xFF) == effectInfo[1]) &&
+					if ((((playerInfo >> 1*8) & 0xFF) == effectInfo[1]) &&
 							(scboard.getObjective("EventCheck").getScore(name).getScore() == 0)) {
 
 						// If player's level upper or equal to min effect level
@@ -70,13 +71,14 @@ public class EffectScheduler implements Runnable {
 						if (((playerInfo & 0xFF) >= effectInfo[3]) && ((playerInfo & 0xFF) <= effectInfo[4])) {
 							
 							PotionEffect playerPotionEffect = player.getPotionEffect(effectEntry.getValue().getType());
-							
+
 							// If player haven't this effect OR
 							// player's effect have now only <=24000 ticks (20m = 1 game day) OR
 							// player's effect have less level
 							if( playerPotionEffect == null ||
-								(playerPotionEffect.getDuration() <= 24000 && effectInfo[5] == 1) || 
-								playerPotionEffect.getAmplifier() < effectEntry.getValue().getAmplifier()) {
+								(playerPotionEffect.getDuration() <= 24000 && effectInfo[5] == 1) ||
+								(effectInfo[5] == 0) ||
+								(playerPotionEffect.getAmplifier() < effectEntry.getValue().getAmplifier())) {
 								
 								player.removePotionEffect(effectEntry.getValue().getType());
 								player.addPotionEffect(effectEntry.getValue());

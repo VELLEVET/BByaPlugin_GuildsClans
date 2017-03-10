@@ -365,6 +365,7 @@ public abstract class Utils {
 	public static void checkObjectives() {
 		if (scboard.getObjective("Emerald_money") == null) scboard.registerNewObjective("Emerald_money", "dummy");
 		if (scboard.getObjective("ExpBottle") == null) scboard.registerNewObjective("ExpBottle", "dummy");
+		if (scboard.getObjective("EventCheck") == null) scboard.registerNewObjective("EventCheck", "dummy");
 		
 		if (scboard.getObjective("ClanID") != null) scboard.getObjective("ClanID").unregister();
 		scboard.registerNewObjective("ClanID", "dummy");
