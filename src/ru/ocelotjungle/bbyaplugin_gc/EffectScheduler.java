@@ -64,7 +64,7 @@ public class EffectScheduler implements Runnable {
 					
 					// If effect's guild = player's guild AND EventCheck = 0
 					if ((((playerInfo >> 1*8) & 0xFF) == effectInfo[1]) &&
-							(scboard.getObjective("EventCheck").getScore(name).getScore() == 0)) {
+							(scboard.getObjective("EventCheck").getScore(player.getName()).getScore() == 0)) {
 
 						// If player's level upper or equal to min effect level
 						// AND player's level lower or equal to max effect level
