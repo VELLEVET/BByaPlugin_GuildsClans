@@ -1,22 +1,17 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.guildsCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.saveCfgs;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.format;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.initCfgsToScoreboard;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.MemorySection;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.MemorySection;
-
-import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.*;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
 
 public class ResetInfoCommand implements CommandInterface {
 	

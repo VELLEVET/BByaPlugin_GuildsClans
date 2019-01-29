@@ -52,7 +52,7 @@ public class Main extends JavaPlugin {
 
 	public void onDisable() {
 		
-		server.getScheduler().cancelAllTasks();
+		server.getScheduler().cancelTasks(this);
 		Logger.log("[BByaPlugin_GuildsClans] Disabled");
 	}
 }

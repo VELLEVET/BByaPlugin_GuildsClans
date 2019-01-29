@@ -6,15 +6,14 @@ package ru.ocelotjungle.bbyaplugin_gc.commands.manage;
  *                                         *
  *******************************************/
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-
 import ru.ocelotjungle.bbyaplugin_gc.Main;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TabComplete implements TabCompleter {
 	

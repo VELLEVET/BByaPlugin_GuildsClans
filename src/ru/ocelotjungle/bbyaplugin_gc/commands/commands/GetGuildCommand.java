@@ -1,14 +1,14 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
+import org.bukkit.command.CommandSender;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
+
 import java.util.List;
 
-import org.bukkit.command.CommandSender;
-
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.guildsCfg;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.format;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
-import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 
 public class GetGuildCommand implements CommandInterface {
 	

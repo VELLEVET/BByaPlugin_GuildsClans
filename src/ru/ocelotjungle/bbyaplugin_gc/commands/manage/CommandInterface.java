@@ -6,9 +6,9 @@ package ru.ocelotjungle.bbyaplugin_gc.commands.manage;
  *                                         *
  *******************************************/
 
-import java.util.List;
-
 import org.bukkit.command.CommandSender;
+
+import java.util.List;
 
 public interface CommandInterface {
 	

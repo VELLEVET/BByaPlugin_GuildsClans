@@ -1,24 +1,18 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.guildsCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.saveCfgs;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.format;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.initCfgsToScoreboard;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.toHex;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.scoreboard.Score;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.IncorrectValueException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.scoreboard.Score;
-
-import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
-import ru.ocelotjungle.bbyaplugin_gc.commands.manage.IncorrectValueException;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.*;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
 
 public class GoToGuildCommand implements CommandInterface {
 

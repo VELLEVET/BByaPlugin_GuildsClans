@@ -1,13 +1,13 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
-import java.util.List;
-
 import org.bukkit.command.CommandSender;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
+
+import java.util.List;
 
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.format;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
-import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
 
 public class GetLevelCommand implements CommandInterface {
 	

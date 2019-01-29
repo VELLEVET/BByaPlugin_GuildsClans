@@ -6,27 +6,16 @@ package ru.ocelotjungle.bbyaplugin_gc.commands.manage;
  *                                         *
  *******************************************/
 
-import java.util.LinkedHashMap;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_11_R1.command.CraftBlockCommandSender;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
-
+import org.bukkit.craftbukkit.v1_13_R2.command.CraftBlockCommandSender;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import ru.ocelotjungle.bbyaplugin_gc.Main;
-import ru.ocelotjungle.bbyaplugin_gc.commands.commands.FullLevelUpCommand;
-import ru.ocelotjungle.bbyaplugin_gc.commands.commands.GetClanCommand;
-import ru.ocelotjungle.bbyaplugin_gc.commands.commands.GetGuildCommand;
-import ru.ocelotjungle.bbyaplugin_gc.commands.commands.GetLevelCommand;
-import ru.ocelotjungle.bbyaplugin_gc.commands.commands.GoToGuildCommand;
-import ru.ocelotjungle.bbyaplugin_gc.commands.commands.HelpCommand;
-import ru.ocelotjungle.bbyaplugin_gc.commands.commands.ReloadCommand;
-import ru.ocelotjungle.bbyaplugin_gc.commands.commands.ResetInfoCommand;
-import ru.ocelotjungle.bbyaplugin_gc.commands.commands.SetClanCommand;
-import ru.ocelotjungle.bbyaplugin_gc.commands.commands.SetGuildCommand;
-import ru.ocelotjungle.bbyaplugin_gc.commands.commands.SetLevelCommand;
+import ru.ocelotjungle.bbyaplugin_gc.commands.commands.*;
+
+import java.util.LinkedHashMap;
 
 public class CommandManager implements CommandExecutor {
 	

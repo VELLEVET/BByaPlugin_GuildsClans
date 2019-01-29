@@ -1,24 +1,18 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.guildsCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.saveCfgs;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.format;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.initCfgsToScoreboard;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.toHex;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import ru.ocelotjungle.bbyaplugin_gc.Logger;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
+import ru.ocelotjungle.bbyaplugin_gc.commands.manage.IncorrectValueException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import ru.ocelotjungle.bbyaplugin_gc.Logger;
-import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
-import ru.ocelotjungle.bbyaplugin_gc.commands.manage.IncorrectValueException;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.*;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
 
 public class SetLevelCommand implements CommandInterface {
 

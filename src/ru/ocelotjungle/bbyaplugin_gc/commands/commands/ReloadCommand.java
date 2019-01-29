@@ -1,17 +1,14 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands.commands;
 
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.reloadCfgs;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.checkObjectives;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.initCfgsToScoreboard;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.initEffects;
-
-import java.util.List;
-
 import org.bukkit.command.CommandSender;
-
 import ru.ocelotjungle.bbyaplugin_gc.EffectScheduler;
 import ru.ocelotjungle.bbyaplugin_gc.Main;
 import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandInterface;
+
+import java.util.List;
+
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.reloadCfgs;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
 
 public class ReloadCommand implements CommandInterface {
 	
