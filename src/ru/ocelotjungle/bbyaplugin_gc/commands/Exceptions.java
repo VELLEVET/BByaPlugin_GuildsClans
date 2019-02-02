@@ -11,4 +11,8 @@ public abstract class Exceptions {
     public static final SimpleCommandExceptionType noPlayersFound = new SimpleCommandExceptionType(
             new LiteralMessage("No players found")
     );
+
+    public static final SimpleCommandExceptionType tooManyPlayersFound = new SimpleCommandExceptionType(
+            new LiteralMessage("Too many players found, expected only one")
+    );
 }

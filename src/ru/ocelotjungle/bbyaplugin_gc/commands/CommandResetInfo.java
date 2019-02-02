@@ -4,7 +4,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ru.ocelotjungle.bbyaplugin_gc.CommandManager;
 
-import java.util.List;
 import java.util.Map;
 
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.*;
@@ -14,7 +13,7 @@ import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.argument;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.literal;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.argumentPlayer;
-import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getResultPlayers;
+import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getResultPlayer;
 
 public class CommandResetInfo extends Command {
     public CommandResetInfo(CommandManager commandManager) {
@@ -26,12 +25,7 @@ public class CommandResetInfo extends Command {
         mainNode = commandManager.register(
                 literal("resetinfo").then(argument("target", argumentPlayer(true)).executes((ctx) -> {
                     CommandSender sender = ctx.getSource().getSender();
-                    List<Player> players = getResultPlayers(ctx, "target");
-                    if(players.size() != 1) {
-                        throw Exceptions.noPlayersFound.create();
-                    }
-
-                    Player player = players.get(0);
+                    Player player = getResultPlayer(ctx, "target");
                     String playerName = player.getName();
                     String playerNameLowercase = playerName.toLowerCase();
 
