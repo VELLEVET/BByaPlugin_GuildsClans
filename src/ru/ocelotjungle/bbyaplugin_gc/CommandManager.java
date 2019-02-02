@@ -36,11 +36,12 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         dispatcher.register(literal(COMMAND_GROUP).redirect(this.mainNode));
 
         this.commands.add(new CommandHelp(this));
-        this.commands.add(new CommandFullLevelUp(this));
-        this.commands.add(new CommandSetGuild(this));
         this.commands.add(new CommandReload(this));
         this.commands.add(new CommandResetInfo(this));
+        this.commands.add(new CommandSetGuild(this));
         this.commands.add(new CommandGetGuild(this));
+        this.commands.add(new CommandFullLevelUp(this));
+        this.commands.add(new CommandSetClan(this));
 
         PluginCommand command = plugin.getCommand(COMMAND_GROUP);
         command.setExecutor(this);
