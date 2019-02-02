@@ -11,6 +11,7 @@ import org.bukkit.command.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.ocelotjungle.bbyaplugin_gc.commands.CommandFullLevelUp;
 import ru.ocelotjungle.bbyaplugin_gc.commands.CommandHelp;
+import ru.ocelotjungle.bbyaplugin_gc.commands.CommandReload;
 import ru.ocelotjungle.bbyaplugin_gc.commands.CommandSetGuild;
 import ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ContextData;
 
@@ -39,6 +40,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         this.commands.add(new CommandHelp(this));
         this.commands.add(new CommandFullLevelUp(this));
         this.commands.add(new CommandSetGuild(this));
+        this.commands.add(new CommandReload(this));
 
         PluginCommand command = plugin.getCommand(COMMAND_GROUP);
         command.setExecutor(this);
