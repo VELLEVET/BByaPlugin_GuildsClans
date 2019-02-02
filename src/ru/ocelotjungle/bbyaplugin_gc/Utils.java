@@ -6,17 +6,11 @@ package ru.ocelotjungle.bbyaplugin_gc;
  *                                         *
  *******************************************/
 
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.clansCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.guildsCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.mainCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.reloadCfgs;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.reloadPlayersCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Logger.errF;
-import static ru.ocelotjungle.bbyaplugin_gc.Logger.log;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.effectList;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -24,11 +18,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.MemorySection;
-import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import static ru.ocelotjungle.bbyaplugin_gc.Configs.*;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.*;
 
 public abstract class Utils {
 	
@@ -78,7 +69,7 @@ public abstract class Utils {
 			try {
 				return valueOf(name.toUpperCase()).getEffectType();
 			} catch (IllegalArgumentException iae) {
-				Logger.err("There is no effect with name " + name + ", used Glowing.");
+				Main.logger().warning("There is no effect with name " + name + ", used Glowing.");
 				return PotionEffectType.GLOWING;
 			}
 		}
@@ -125,7 +116,7 @@ public abstract class Utils {
 		reloadCfgs();
 		
 		if(!playersCfg.contains("players") || ((MemorySection) playersCfg.get("players")).getValues(false).size() == 0) {
-			log("[BByaPlugin_GuildsClans] List of players is empty");
+			Main.logger().info("List of players is empty");
 			return;
 		}
 		
@@ -153,7 +144,7 @@ public abstract class Utils {
 						.getScore(fullName).setScore(level);
 				
 			} else {
-				errF("There's no guild with this ID (%s; %d)", name, guildId);
+				Main.logger().warning(format("There's no guild with this ID (%s; %d)", name, guildId));
 			}
 		}
 		
@@ -163,7 +154,7 @@ public abstract class Utils {
 			scboard.getObjective("ClanID").getScore(fullName).setScore(clanId);
 			
 		} else {
-			errF("There's no clan with this ID (%s; %d)", name, clanId);
+			Main.logger().warning(format("There's no clan with this ID (%s; %d)", name, clanId));
 		}
 		
 		if (isRebuildNeeded) {
@@ -189,7 +180,7 @@ public abstract class Utils {
 		reloadCfgs();
 		
 		if(!playersCfg.contains("players") || ((MemorySection) playersCfg.get("players")).getValues(false).size() == 0) {
-			log("[BByaPlugin_GuildsClans] List of players is empty");
+			Main.logger().info("List of players is empty");
 			return;
 		}
 		
@@ -220,7 +211,7 @@ public abstract class Utils {
 							.getScore(fullName).setScore(level);
 					
 				} else {
-					errF("There's no guild with this ID (%s; %d)", name, guildId);
+					Main.logger().warning(format("There's no guild with this ID (%s; %d)", name, guildId));
 				}
 			}
 			
@@ -231,7 +222,7 @@ public abstract class Utils {
 					scboard.getObjective("ClanID").getScore(fullName).setScore(clanId);
 					
 				} else {
-					errF("There's no clan with this ID (%s; %d)", name, clanId);
+					Main.logger().warning(format("There's no clan with this ID (%s; %d)", name, clanId));
 				}
 			}
 		}
@@ -245,7 +236,7 @@ public abstract class Utils {
 		for(String guild : guildsCfg.getValues(false).keySet()) {
 			try { Short.parseShort(guild); } 
 			catch (NumberFormatException nfe) {
-				Logger.err(format("There's incorrect value of guild number (%s).", guild));
+				Main.logger().warning(format("There's incorrect value of guild number (%s).", guild));
 				continue;
 			}
 			
@@ -256,7 +247,7 @@ public abstract class Utils {
 			for(String effectNumber : ((MemorySection) guildsCfg.get(guild + ".effects")).getValues(false).keySet()) {
 				try { Short.parseShort(effectNumber); } 
 				catch (NumberFormatException nfe) {
-					Logger.err(format("There's incorrect value of effect number (%s; %s).", guild, effectNumber));
+					Main.logger().warning(format("There's incorrect value of effect number (%s; %s).", guild, effectNumber));
 					continue;
 				}
 				
@@ -265,7 +256,7 @@ public abstract class Utils {
 					for (Entry<String, Object> effect : ((MemorySection) effectInfo.get("levels")).getValues(false).entrySet()) {
 						try { Short.parseShort(effect.getKey()); } 
 						catch (NumberFormatException nfe) {
-							Logger.err(format("There's incorrect value of effect level (%s.%s; %s).", guild, effectNumber, effect.getKey()));
+							Main.logger().warning(format("There's incorrect value of effect level (%s.%s; %s).", guild, effectNumber, effect.getKey()));
 							continue;
 						}
 						
@@ -275,7 +266,7 @@ public abstract class Utils {
 							maxLevel = (int) effect.getValue();
 							
 						} else if (effect.getValue() instanceof ArrayList) {
-							ArrayList<?> value = (ArrayList<?>) effect.getValue();
+							ArrayList<Object> value = (ArrayList<Object>) effect.getValue();
 							
 							if (value.size() == 1 && (int) value.get(0) > 0) {
 								minLevel = (int) value.get(0);
@@ -302,7 +293,7 @@ public abstract class Utils {
 								Integer.parseInt(effect.getKey()) - 1, true, false));
 					}
 				} catch (NullPointerException npe) {
-					Logger.err("Not found any effect at " + guild + "." + effectNumber);
+					Main.logger().warning("Not found any effect at " + guild + "." + effectNumber);
 				}
 			}
 		}

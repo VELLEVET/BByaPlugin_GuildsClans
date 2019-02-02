@@ -6,11 +6,11 @@ package ru.ocelotjungle.bbyaplugin_gc;
  *                                         *
  *******************************************/
 
-import java.io.File;
-import java.io.IOException;
-
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.io.IOException;
 
 import static ru.ocelotjungle.bbyaplugin_gc.Main.plugin;
 
@@ -19,8 +19,11 @@ public class Configs {
 	public static FileConfiguration mainCfg, playersCfg, clansCfg, guildsCfg;
 	
 	public static void saveCfgs() {
-		try { playersCfg.save(new File(plugin.getDataFolder(), "players.yml")); }
-		catch (IOException io) { Logger.errF("Cannot save players config to disk. Reason: %s", io.toString()); }
+		try {
+			playersCfg.save(new File(plugin.getDataFolder(), "players.yml"));
+		} catch (IOException io) {
+			Main.logger().severe(Utils.format("Cannot save players config to disk. Reason: %s", io.toString()));
+		}
 		
 		// No need to save these cfgs
 		/*try { Configs.clansCfg.save(new File(Main.plugin.getDataFolder(), "clans.yml")); }
