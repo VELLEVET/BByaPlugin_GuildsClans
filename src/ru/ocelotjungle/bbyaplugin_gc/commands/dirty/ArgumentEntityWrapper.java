@@ -7,6 +7,7 @@ import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntitySelector;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import ru.ocelotjungle.bbyaplugin_gc.commands.Exceptions;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +31,10 @@ public abstract class ArgumentEntityWrapper {
                 context.getArgument(argumentName, EntitySelector.class)
                         .d(context.getSource().getCommandListenerWrapper());
 
+        if(playersVanilla.size() <= 0) {
+            throw Exceptions.noPlayersFound.create();
+        }
+
         List<Player> playersBukkit = new ArrayList<>();
 
         for (EntityPlayer playerVanilla : playersVanilla) {
@@ -37,5 +42,17 @@ public abstract class ArgumentEntityWrapper {
         }
 
         return playersBukkit;
+    }
+
+    public static Player getResultPlayer(
+            final CommandContext<ContextData> context,
+            final String argumentName) throws CommandSyntaxException {
+
+        List<Player> players = getResultPlayers(context, argumentName);
+        if(players.size() > 1) {
+            throw Exceptions.tooManyPlayersFound.create();
+        }
+
+        return players.get(0);
     }
 }
