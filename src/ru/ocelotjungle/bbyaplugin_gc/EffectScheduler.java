@@ -1,25 +1,22 @@
 package ru.ocelotjungle.bbyaplugin_gc;
 
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+
+import java.util.Locale;
+import java.util.Map.Entry;
+
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.mainCfg;
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.effectList;
-import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.*;
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
 
 /*******************************************
  *                                         *
  *    Effect issue to players in guilds    *
  *                                         *
  *******************************************/
-
-import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
-
-import java.util.Locale;
-import java.util.Map.Entry;
-
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
 
 public class EffectScheduler implements Runnable {
 

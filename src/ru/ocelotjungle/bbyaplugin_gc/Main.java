@@ -6,28 +6,22 @@ package ru.ocelotjungle.bbyaplugin_gc;
  *                                         *
  *******************************************/
 
-import static ru.ocelotjungle.bbyaplugin_gc.Utils.checkObjectives;
-
-import java.util.LinkedHashMap;
-import java.util.logging.Level;
-
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Scoreboard;
 
-import ru.ocelotjungle.bbyaplugin_gc.commands.manage.CommandManager;
-import ru.ocelotjungle.bbyaplugin_gc.commands.manage.TabComplete;
+import java.util.LinkedHashMap;
+import java.util.logging.Logger;
+
+import static ru.ocelotjungle.bbyaplugin_gc.Utils.checkObjectives;
 
 public class Main extends JavaPlugin {
-
 	public static org.bukkit.Server server;
 	public static Scoreboard scboard;
 	public static Main plugin;
 	public static LinkedHashMap<Long, PotionEffect> effectList;
 	
-	public Main() {
-		getLogger().setLevel(Level.OFF);
-	}
+	public Main() { }
 
 	public void onEnable() {		
 		server = getServer();
@@ -43,16 +37,19 @@ public class Main extends JavaPlugin {
 		Utils.initCfgsToScoreboard(true);
 
 		new CommandManager(this);
-		new TabComplete(this);
+
 		new PlayerJoinEventListener(this);
 		new EffectScheduler(this);
-		
-		Logger.log("[BByaPlugin_GuildsClans] Enabled");
+
+		logger().info("Enabled");
 	}
 
 	public void onDisable() {
-		
-		server.getScheduler().cancelAllTasks();
-		Logger.log("[BByaPlugin_GuildsClans] Disabled");
+		server.getScheduler().cancelTasks(this);
+		logger().info("Disabled");
+	}
+
+	public static Logger logger() {
+		return plugin.getLogger();
 	}
 }
