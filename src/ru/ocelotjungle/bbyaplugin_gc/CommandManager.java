@@ -40,6 +40,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         this.commands.add(new CommandSetGuild(this));
         this.commands.add(new CommandReload(this));
         this.commands.add(new CommandResetInfo(this));
+        this.commands.add(new CommandGetGuild(this));
 
         PluginCommand command = plugin.getCommand(COMMAND_GROUP);
         command.setExecutor(this);
