@@ -8,6 +8,10 @@ public abstract class Exceptions {
             new LiteralMessage("Guild not found")
     );
 
+    public static final SimpleCommandExceptionType clanNotFound = new SimpleCommandExceptionType(
+            new LiteralMessage("Clan not found")
+    );
+
     public static final SimpleCommandExceptionType noPlayersFound = new SimpleCommandExceptionType(
             new LiteralMessage("No players found")
     );
