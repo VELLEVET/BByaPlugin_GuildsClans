@@ -21,9 +21,9 @@ public class CommandSetGuild extends Command {
     protected void init() {
         mainNode = commandManager.register(
             literal("setguild").then(argument("target", argumentPlayer(true))
-                    .then(argument("guild", GuildArgumentType.argument()).executes((ctx) -> {
+                    .then(argument("guild", GuildArgumentType.argumentGuild()).executes((ctx) -> {
                         Player player = getResultPlayer(ctx, "target");
-                        byte guildId = GuildArgumentType.get(ctx, "guild");
+                        byte guildId = GuildArgumentType.getGuild(ctx, "guild");
 
                         String playerName = player.getName();
                         String playerNameLowercase = playerName.toLowerCase();

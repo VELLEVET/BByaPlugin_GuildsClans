@@ -66,11 +66,11 @@ public class GuildArgumentType implements ArgumentType<Byte> {
         return EXAMPLES;
     }
 
-    public static GuildArgumentType argument() {
+    public static GuildArgumentType argumentGuild() {
         return new GuildArgumentType();
     }
 
-    public static <S> byte get(CommandContext<S> context, String name) {
+    public static <S> byte getGuild(CommandContext<S> context, String name) {
         return context.getArgument(name, Byte.TYPE);
     }
 }
