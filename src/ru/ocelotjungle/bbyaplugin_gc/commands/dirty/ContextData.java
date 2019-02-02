@@ -1,6 +1,8 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands.dirty;
 
-import net.minecraft.server.v1_13_R2.*;
+import net.minecraft.server.v1_13_R2.CommandListenerWrapper;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.MinecraftServer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_13_R2.command.CraftBlockCommandSender;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;

@@ -8,7 +8,9 @@ import net.minecraft.server.v1_13_R2.EntitySelector;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public abstract class ArgumentEntityWrapper {
     public static ArgumentEntity argumentPlayer(final boolean singleOnly) {
