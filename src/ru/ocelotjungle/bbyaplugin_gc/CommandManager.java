@@ -9,7 +9,6 @@ import com.mojang.brigadier.tree.CommandNode;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.plugin.java.JavaPlugin;
-import ru.ocelotjungle.bbyaplugin_gc.commands.CommandFullLevelUp;
 import ru.ocelotjungle.bbyaplugin_gc.commands.CommandHelp;
 import ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ContextData;
 
@@ -34,6 +33,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 literal("gc")
         );
         dispatcher.register(literal(COMMAND_GROUP).redirect(this.mainNode));
+
+        this.commands.add(new CommandHelp(this));
 
         PluginCommand command = plugin.getCommand(COMMAND_GROUP);
         command.setExecutor(this);
