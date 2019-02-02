@@ -1,7 +1,8 @@
 name: BByaPlugin_GuildsClans
 main: ru.ocelotjungle.bbyaplugin_gc.Main
-version: 1
+version: 1.1
 description: Processing of Guilds and Clans on server
+prefix: GuildsClans
 commands:
   bbyaplugingc:
     description: main command
