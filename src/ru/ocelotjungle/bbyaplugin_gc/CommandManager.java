@@ -41,6 +41,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         this.commands.add(new CommandSetGuild(this));
         this.commands.add(new CommandGetGuild(this));
         this.commands.add(new CommandGoToBuild(this));
+        this.commands.add(new CommandSetLevel(this));
         this.commands.add(new CommandFullLevelUp(this));
         this.commands.add(new CommandSetClan(this));
         this.commands.add(new CommandGetClan(this));

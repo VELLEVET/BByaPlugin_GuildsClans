@@ -15,10 +15,14 @@ public abstract class Exceptions {
     public static final SimpleCommandExceptionType notEnoughMoney = new SimpleCommandExceptionType(
             new LiteralMessage("The player has not enough money")
     );
+
     public static final SimpleCommandExceptionType notEnoughExperienceBottles = new SimpleCommandExceptionType(
             new LiteralMessage("The player has not enough experience bottles")
     );
 
+    public static final SimpleCommandExceptionType wrongGuildLevel = new SimpleCommandExceptionType(
+            new LiteralMessage("The guild level is too high")
+    );
 
     public static final SimpleCommandExceptionType clanNotFound = new SimpleCommandExceptionType(
             new LiteralMessage("Clan not found")
