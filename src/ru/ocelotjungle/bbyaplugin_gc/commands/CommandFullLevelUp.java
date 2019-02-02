@@ -7,7 +7,6 @@ import ru.ocelotjungle.bbyaplugin_gc.CommandManager;
 import java.util.List;
 
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.*;
-import static ru.ocelotjungle.bbyaplugin_gc.Configs.saveCfgs;
 import static ru.ocelotjungle.bbyaplugin_gc.Main.scboard;
 import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
@@ -29,9 +28,8 @@ public class CommandFullLevelUp extends Command {
                     CommandSender sender = ctx.getSource().getSender();
                     List<Player> players = getResultPlayers(ctx, "target");
 
-                    if(players.size() == 0) {
-                        sender.sendMessage("No players found");
-                        return 0;
+                    if(players.size() != 1) {
+                        throw Exceptions.noPlayersFound.create();
                     }
 
                     String originalName = players.get(0).getName();
