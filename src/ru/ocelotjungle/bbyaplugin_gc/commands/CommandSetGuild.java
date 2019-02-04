@@ -1,7 +1,7 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands;
 
-import org.bukkit.entity.Player;
 import ru.ocelotjungle.bbyaplugin_gc.CommandManager;
+import ru.ocelotjungle.bbyaplugin_gc.Main;
 import ru.ocelotjungle.bbyaplugin_gc.commands.arguments.GuildArgumentType;
 
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.*;
@@ -9,7 +9,7 @@ import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.argument;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.literal;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.argumentPlayer;
-import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getResultPlayer;
+import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getPlayerName;
 
 public class CommandSetGuild extends Command {
 
@@ -22,10 +22,9 @@ public class CommandSetGuild extends Command {
         mainNode = commandManager.register(
             literal("setguild").then(argument("target", argumentPlayer(true))
                     .then(argument("guild", GuildArgumentType.argumentGuild()).executes((ctx) -> {
-                        Player player = getResultPlayer(ctx, "target");
                         byte guildId = GuildArgumentType.getGuild(ctx, "guild");
 
-                        String playerName = player.getName();
+                        String playerName = getPlayerName(ctx, "target");
                         String playerNameLowercase = playerName.toLowerCase();
                         int playerInfo = fromHex(playersCfg.getString("players." + playerNameLowercase)) & 0xFFFFFF;
 
@@ -36,7 +35,7 @@ public class CommandSetGuild extends Command {
                         }
 
                         saveCfgs();
-                        initCfgsToScoreboard(player, true);
+                        initCfgsToScoreboard(Main.server.getPlayer(playerName), true);
 
                         ctx.getSource().getSender().sendMessage(format("You set guild (%s; %s) for player %s.",
                                 guildsCfg.getString(String.valueOf(guildId) + ".engName"), guildId, playerName));

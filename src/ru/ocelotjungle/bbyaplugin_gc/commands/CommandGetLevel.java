@@ -1,7 +1,6 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import ru.ocelotjungle.bbyaplugin_gc.CommandManager;
 
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.playersCfg;
@@ -10,7 +9,7 @@ import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.argument;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.literal;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.argumentPlayer;
-import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getResultPlayer;
+import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getPlayerName;
 
 public class CommandGetLevel extends Command {
     public CommandGetLevel(CommandManager commandManager) {
@@ -21,10 +20,9 @@ public class CommandGetLevel extends Command {
     protected void init() {
         mainNode = commandManager.register(
                 literal("getlevel").then(argument("target", argumentPlayer(true)).executes((ctx) -> {
-                    Player player = getResultPlayer(ctx, "target");
                     CommandSender sender = ctx.getSource().getSender();
 
-                    String playerName = player.getName();
+                    String playerName = getPlayerName(ctx, "target");
                     String playerNameLowercase = playerName.toLowerCase();
 
                     sender.sendMessage(format("%s's guild level is %s.",
