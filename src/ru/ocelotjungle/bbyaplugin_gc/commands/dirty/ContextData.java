@@ -1,11 +1,11 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands.dirty;
 
-import net.minecraft.server.v1_15_R1.CommandListenerWrapper;
-import net.minecraft.server.v1_15_R1.EntityPlayer;
-import net.minecraft.server.v1_15_R1.MinecraftServer;
+import net.minecraft.server.v1_16_R1.CommandListenerWrapper;
+import net.minecraft.server.v1_16_R1.EntityPlayer;
+import net.minecraft.server.v1_16_R1.MinecraftServer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_15_R1.command.CraftBlockCommandSender;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_16_R1.command.CraftBlockCommandSender;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
 
 public class ContextData {
     private CommandSender sender;
