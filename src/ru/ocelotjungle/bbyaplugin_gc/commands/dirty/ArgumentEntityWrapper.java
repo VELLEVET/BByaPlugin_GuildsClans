@@ -2,9 +2,9 @@ package ru.ocelotjungle.bbyaplugin_gc.commands.dirty;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.server.v1_16_R1.ArgumentEntity;
-import net.minecraft.server.v1_16_R1.EntityPlayer;
-import net.minecraft.server.v1_16_R1.EntitySelector;
+import net.minecraft.server.v1_16_R3.ArgumentEntity;
+import net.minecraft.server.v1_16_R3.EntityPlayer;
+import net.minecraft.server.v1_16_R3.EntitySelector;
 import ru.ocelotjungle.bbyaplugin_gc.Main;
 import ru.ocelotjungle.bbyaplugin_gc.commands.Exceptions;
 
