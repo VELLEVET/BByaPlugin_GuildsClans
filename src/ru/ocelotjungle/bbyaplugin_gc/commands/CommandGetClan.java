@@ -1,7 +1,6 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import ru.ocelotjungle.bbyaplugin_gc.CommandManager;
 
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.clansCfg;
@@ -11,7 +10,7 @@ import static ru.ocelotjungle.bbyaplugin_gc.Utils.fromHex;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.argument;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.literal;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.argumentPlayer;
-import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getResultPlayer;
+import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getPlayerName;
 
 public class CommandGetClan extends Command {
     public CommandGetClan(CommandManager commandManager) {
@@ -23,9 +22,8 @@ public class CommandGetClan extends Command {
         mainNode = commandManager.register(
                 literal("getclan").then(argument("target", argumentPlayer(true)).executes((ctx) -> {
                     CommandSender sender = ctx.getSource().getSender();
-                    Player player = getResultPlayer(ctx, "target");
 
-                    String playerName = player.getName();
+                    String playerName = getPlayerName(ctx, "target");
                     String playerNameLowercase = playerName.toLowerCase();
 
                     int clan = (fromHex(playersCfg.getString("players." + playerNameLowercase))>>2*8) & 0xFF;

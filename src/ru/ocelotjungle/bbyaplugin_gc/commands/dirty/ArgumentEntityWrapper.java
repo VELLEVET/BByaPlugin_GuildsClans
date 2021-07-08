@@ -2,13 +2,13 @@ package ru.ocelotjungle.bbyaplugin_gc.commands.dirty;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.server.v1_13_R2.ArgumentEntity;
-import net.minecraft.server.v1_13_R2.EntityPlayer;
-import net.minecraft.server.v1_13_R2.EntitySelector;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import net.minecraft.server.v1_16_R3.ArgumentEntity;
+import net.minecraft.server.v1_16_R3.EntityPlayer;
+import net.minecraft.server.v1_16_R3.EntitySelector;
+import ru.ocelotjungle.bbyaplugin_gc.Main;
 import ru.ocelotjungle.bbyaplugin_gc.commands.Exceptions;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,33 +22,54 @@ public abstract class ArgumentEntityWrapper {
         }
     }
 
-    public static List<Player> getResultPlayers(
+    public static List<String> getPlayerNames(
             final CommandContext<ContextData> context,
             final String argumentName) throws CommandSyntaxException {
 
-        // Copied from ArgumentEntity.f(CommandContext<CommandListenerWrapper>, String) method
-        Collection<EntityPlayer> playersVanilla =
-                context.getArgument(argumentName, EntitySelector.class)
-                        .d(context.getSource().getCommandListenerWrapper());
+        // See ArgumentEntity.f(CommandContext<CommandListenerWrapper>, String) method
+        EntitySelector selector = context.getArgument(argumentName, EntitySelector.class);
+        Collection<EntityPlayer> playersVanilla = selector.d(context.getSource().getCommandListenerWrapper());
+        if(playersVanilla.size() > 0) {
+            List<String> players = new ArrayList<>();
 
-        if(playersVanilla.size() <= 0) {
-            throw Exceptions.noPlayersFound.create();
+            for (EntityPlayer playerVanilla : playersVanilla) {
+                players.add(playerVanilla.getName());
+            }
+
+            return players;
+        } else {
+            List<String> players = new ArrayList<>();
+
+            // Try to see if the selector is a nickname
+            // EntitySelector.j field contains nickname if specified or null otherwise (as of 1.13.2)
+            try {
+                Field nameField = EntitySelector.class.getDeclaredField("j");
+                boolean wasAccessible = nameField.isAccessible();
+                nameField.setAccessible(true);
+                String name = (String) nameField.get(selector);
+                nameField.setAccessible(wasAccessible);
+
+                if(name != null) {
+                    players.add(name);
+                }
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                Main.logger().warning(e.getMessage());
+                throw Exceptions.noPlayersFound.create();
+            }
+
+            if(players.size() <= 0) {
+                throw Exceptions.noPlayersFound.create();
+            }
+
+            return players;
         }
-
-        List<Player> playersBukkit = new ArrayList<>();
-
-        for (EntityPlayer playerVanilla : playersVanilla) {
-            playersBukkit.add(Bukkit.getPlayer(playerVanilla.getUniqueID()));
-        }
-
-        return playersBukkit;
     }
 
-    public static Player getResultPlayer(
+    public static String getPlayerName(
             final CommandContext<ContextData> context,
             final String argumentName) throws CommandSyntaxException {
 
-        List<Player> players = getResultPlayers(context, argumentName);
+        List<String> players = getPlayerNames(context, argumentName);
         if(players.size() > 1) {
             throw Exceptions.tooManyPlayersFound.create();
         }

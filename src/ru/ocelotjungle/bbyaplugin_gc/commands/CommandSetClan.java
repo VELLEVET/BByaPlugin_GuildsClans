@@ -1,17 +1,17 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import ru.ocelotjungle.bbyaplugin_gc.CommandManager;
 
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.*;
+import static ru.ocelotjungle.bbyaplugin_gc.Main.server;
 import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.arguments.ClanArgumentType.argumentClan;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.arguments.ClanArgumentType.getClan;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.argument;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.literal;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.argumentPlayer;
-import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getResultPlayer;
+import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getPlayerName;
 
 public class CommandSetClan extends Command {
     public CommandSetClan(CommandManager commandManager) {
@@ -24,10 +24,9 @@ public class CommandSetClan extends Command {
                 literal("setclan").then(argument("target", argumentPlayer(true))
                         .then(argument("clan", argumentClan()).executes((ctx) -> {
                             CommandSender sender = ctx.getSource().getSender();
-                            Player player = getResultPlayer(ctx, "target");
                             int clanId = getClan(ctx, "clan");
 
-                            String playerName = player.getName();
+                            String playerName = getPlayerName(ctx, "target");
                             String playerNameLowercase = playerName.toLowerCase();
 
                             int playerInfo = fromHex(playersCfg.getString("players." + playerNameLowercase)) & 0xFFFFFF;
@@ -42,7 +41,7 @@ public class CommandSetClan extends Command {
                                     clansCfg.getString(clanId + ".label"), clanId, playerName));
 
                             saveCfgs();
-                            initCfgsToScoreboard(player, true);
+                            initCfgsToScoreboard(server.getPlayer(playerName), true);
 
                             return 0;
                         })))

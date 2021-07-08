@@ -1,7 +1,6 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import ru.ocelotjungle.bbyaplugin_gc.CommandManager;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
@@ -12,7 +11,7 @@ import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.argument;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.literal;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.argumentPlayer;
-import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getResultPlayer;
+import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getPlayerName;
 
 public class CommandSetLevel extends Command {
     public CommandSetLevel(CommandManager commandManager) {
@@ -25,10 +24,9 @@ public class CommandSetLevel extends Command {
                 literal("setlevel").then(argument("target", argumentPlayer(true))
                     .then(argument("level", integer(0, 255)).executes((ctx) -> {
                         CommandSender sender = ctx.getSource().getSender();
-                        Player player = getResultPlayer(ctx, "target");
                         int level = getInteger(ctx, "level");
 
-                        String playerName = player.getName();
+                        String playerName = getPlayerName(ctx, "target");
                         String playerNameLowercase = playerName.toLowerCase();
                         int playerInfo = fromHex(playersCfg.getString("players." + playerNameLowercase)) & 0xFFFFFF;
 

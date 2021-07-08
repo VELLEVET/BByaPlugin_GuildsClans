@@ -1,7 +1,6 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import ru.ocelotjungle.bbyaplugin_gc.CommandManager;
 
 import static ru.ocelotjungle.bbyaplugin_gc.Configs.*;
@@ -11,7 +10,7 @@ import static ru.ocelotjungle.bbyaplugin_gc.Utils.*;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.argument;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentBuilder.literal;
 import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.argumentPlayer;
-import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getResultPlayer;
+import static ru.ocelotjungle.bbyaplugin_gc.commands.dirty.ArgumentEntityWrapper.getPlayerName;
 
 public class CommandFullLevelUp extends Command {
     public CommandFullLevelUp(CommandManager commandManager) {
@@ -24,21 +23,20 @@ public class CommandFullLevelUp extends Command {
                 literal("fulllevelup").then(argument("target", argumentPlayer(true))
                 .executes((ctx) -> {
                     CommandSender sender = ctx.getSource().getSender();
-                    Player player = getResultPlayer(ctx, "target");
-                    String originalName = player.getName();
-                    String name = originalName.toLowerCase();
+                    String playerName = getPlayerName(ctx, "target");
+                    String playerNameLowercase = playerName.toLowerCase();
 
                     reloadGuildsCfg();
                     reloadPlayersCfg();
 
-                    int playerInfo = fromHex(playersCfg.getString("players." + name)) & 0xFFFFFF,
+                    int playerInfo = fromHex(playersCfg.getString("players." + playerNameLowercase)) & 0xFFFFFF,
                             newLevel = playerInfo & 0xFF,
                             guildId = (playerInfo >> 1*8) & 0xFF,
                             maxGuildLevel = guildsCfg.getInt(guildId + ".maxLevel");
 
                     if (newLevel >= maxGuildLevel) {
                         sender.sendMessage(format("Player %s already has max level of his guild (%d of %d).",
-                                originalName, newLevel, maxGuildLevel));
+                                playerName, newLevel, maxGuildLevel));
                         return 0;
                     }
 
@@ -53,8 +51,8 @@ public class CommandFullLevelUp extends Command {
                     boolean doesStepAffectsMoney = mainCfg.getBoolean("stepAffectsMoney"),
                             doesStepAffectsBottles = mainCfg.getBoolean("stepAffectsBottles");
 
-                    int newScoreMoney = scboard.getObjective("Emerald_money").getScore(originalName).getScore(),
-                            newScoreBottles = scboard.getObjective("ExpBottle").getScore(originalName).getScore(),
+                    int newScoreMoney = scboard.getObjective("Emerald_money").getScore(playerName).getScore(),
+                            newScoreBottles = scboard.getObjective("ExpBottle").getScore(playerName).getScore(),
                             costMoney = guildsCfg.getInt(guildId + ".levelup.money"),
                             costBottles = guildsCfg.getInt(guildId + ".levelup.bottles"),
                             costStep = guildsCfg.getInt(guildId + ".levelup.step");
@@ -78,12 +76,12 @@ public class CommandFullLevelUp extends Command {
                             ", emeralds = " + newScoreMoney +
                             ", bottles = " + newScoreBottles + ".");
 
-                    scboard.getObjective("Emerald_money").getScore(originalName).setScore(newScoreMoney);
-                    scboard.getObjective("ExpBottle").getScore(originalName).setScore(newScoreBottles);
-                    playersCfg.set("players." + name, toHex(playerInfo&0xFFFF00 | newLevel));
+                    scboard.getObjective("Emerald_money").getScore(playerName).setScore(newScoreMoney);
+                    scboard.getObjective("ExpBottle").getScore(playerName).setScore(newScoreBottles);
+                    playersCfg.set("players." + playerNameLowercase, toHex(playerInfo&0xFFFF00 | newLevel));
 
                     saveCfgs();
-                    initCfgsToScoreboard(server.getPlayer(name), true);
+                    initCfgsToScoreboard(server.getPlayer(playerName), true);
 
                     return 0;
                 }))
