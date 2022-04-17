@@ -1,15 +1,15 @@
 package ru.ocelotjungle.bbyaplugin_gc.commands.dirty;
 
-import net.minecraft.server.v1_16_R3.CommandListenerWrapper;
-import net.minecraft.server.v1_16_R3.EntityPlayer;
-import net.minecraft.server.v1_16_R3.MinecraftServer;
+import net.minecraft.commands.CommandListenerWrapper;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.EntityPlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_16_R3.command.CraftBlockCommandSender;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R2.command.CraftBlockCommandSender;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 
 public class ContextData {
-    private CommandSender sender;
-    private CommandListenerWrapper commandListenerWrapper;
+    private final CommandSender sender;
+    private final CommandListenerWrapper commandListenerWrapper;
 
     public ContextData(CommandSender sender) {
         this.sender = sender;
@@ -18,9 +18,9 @@ public class ContextData {
             this.commandListenerWrapper = senderCast.getWrapper();
         } else if(sender instanceof CraftPlayer) {
             EntityPlayer senderCast = ((CraftPlayer) sender).getHandle();
-            this.commandListenerWrapper = senderCast.getCommandListener();
+            this.commandListenerWrapper = senderCast.cQ();
         } else {
-            this.commandListenerWrapper = MinecraftServer.getServer().getServerCommandListener();
+            this.commandListenerWrapper = MinecraftServer.getServer().aB();
         }
     }
 

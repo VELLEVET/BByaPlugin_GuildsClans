@@ -2,9 +2,9 @@ package ru.ocelotjungle.bbyaplugin_gc.commands.dirty;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.server.v1_16_R3.ArgumentEntity;
-import net.minecraft.server.v1_16_R3.EntityPlayer;
-import net.minecraft.server.v1_16_R3.EntitySelector;
+import net.minecraft.commands.arguments.ArgumentEntity;
+import net.minecraft.commands.arguments.selector.EntitySelector;
+import net.minecraft.server.level.EntityPlayer;
 import ru.ocelotjungle.bbyaplugin_gc.Main;
 import ru.ocelotjungle.bbyaplugin_gc.commands.Exceptions;
 
@@ -33,7 +33,7 @@ public abstract class ArgumentEntityWrapper {
             List<String> players = new ArrayList<>();
 
             for (EntityPlayer playerVanilla : playersVanilla) {
-                players.add(playerVanilla.getName());
+                players.add(playerVanilla.displayName);
             }
 
             return players;
